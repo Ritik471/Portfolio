@@ -1,11 +1,25 @@
-import { Music, ExternalLink } from "lucide-react";
+import { Music, ExternalLink, MapPin, Calendar, Coffee, BookOpen } from "lucide-react";
 import Reveal from "../components/Reveal";
+
+const highlights = [
+  { icon: MapPin, label: "Based in", value: "San Francisco, CA" },
+  { icon: Calendar, label: "Experience", value: "5+ Years" },
+  { icon: Coffee, label: "Projects Delivered", value: "50+" },
+  { icon: BookOpen, label: "Always", value: "Learning" },
+];
+
+const skills = [
+  { category: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"] },
+  { category: "Mobile", items: ["Flutter", "React Native", "Android (Kotlin)", "iOS (SwiftUI)"] },
+  { category: "Backend", items: ["Node.js", "Python", "Go", "PostgreSQL", "Redis"] },
+  { category: "Design & Tools", items: ["Figma", "Adobe XD", "Git", "Docker", "AWS"] },
+];
 
 const About = () => {
   return (
-    <div className="min-h-screen pt-28 pb-20">
+    <div className="min-h-screen pb-28">
       {/* Header */}
-      <section className="px-6 mb-20">
+      <section className="px-6 pt-16 pb-20">
         <Reveal className="max-w-6xl mx-auto">
           <p className="font-mono text-sm text-muted-foreground tracking-widest uppercase mb-4">
             About
@@ -16,6 +30,26 @@ const About = () => {
             <span className="text-muted-foreground">lifelong learner.</span>
           </h1>
         </Reveal>
+      </section>
+
+      <div className="w-full h-px bg-border" />
+
+      {/* Quick highlights */}
+      <section className="py-16 px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {highlights.map((h, i) => {
+            const Icon = h.icon;
+            return (
+              <Reveal key={h.label} delay={i * 0.1}>
+                <div className="glass rounded-2xl p-5 text-center">
+                  <Icon className="w-5 h-5 text-muted-foreground mx-auto mb-2" />
+                  <p className="font-mono text-xs text-muted-foreground mb-1">{h.label}</p>
+                  <p className="font-semibold">{h.value}</p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
       </section>
 
       <div className="w-full h-px bg-border" />
@@ -31,37 +65,25 @@ const About = () => {
                 how things work under the hood — and it hasn't stopped since.
               </p>
               <p>
-                I specialize in full-stack development with TypeScript, React, and Node.js,
-                but I'm equally comfortable working with Go, Python, and Rust. I believe in
-                writing code that is not just functional, but elegant and maintainable.
+                I specialize in frontend and full-stack development with TypeScript, React,
+                and Flutter. I create digital experiences that are not just functional,
+                but delightful — balancing performance, aesthetics, and usability in every project.
+              </p>
+              <p>
+                From crafting pixel-perfect UIs to architecting scalable backend systems,
+                I enjoy tackling challenges across the entire stack. I believe great software
+                is built at the intersection of technical excellence and thoughtful design.
               </p>
               <p>
                 When I'm not coding, you'll find me contributing to open-source projects,
-                exploring distributed systems, or diving into a new programming language.
+                mentoring junior developers, or exploring the latest in design systems
+                and developer tooling.
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={0.2}>
             <div className="space-y-6">
-              {/* Skills */}
-              <div className="glass rounded-2xl p-6">
-                <p className="font-mono text-xs text-muted-foreground mb-4">Tech Stack</p>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "TypeScript", "React", "Next.js", "Node.js", "Go", "Python",
-                    "PostgreSQL", "Redis", "Docker", "AWS", "GraphQL", "Rust",
-                  ].map((skill) => (
-                    <span
-                      key={skill}
-                      className="font-mono text-xs px-3 py-1.5 rounded-lg bg-accent text-accent-foreground"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               {/* Spotify */}
               <div className="glass rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -84,6 +106,35 @@ const About = () => {
               </div>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      <div className="w-full h-px bg-border" />
+
+      {/* Skills Grid */}
+      <section className="py-20 px-6">
+        <Reveal className="max-w-6xl mx-auto mb-12">
+          <p className="font-mono text-sm text-muted-foreground tracking-widest uppercase mb-4">Expertise</p>
+          <h2 className="text-4xl sm:text-5xl font-bold">Skills & Tools</h2>
+        </Reveal>
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {skills.map((group, i) => (
+            <Reveal key={group.category} delay={i * 0.1}>
+              <div className="glass rounded-2xl p-6 h-full">
+                <p className="font-mono text-xs text-muted-foreground mb-4">{group.category}</p>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((skill) => (
+                    <span
+                      key={skill}
+                      className="font-mono text-xs px-3 py-1.5 rounded-lg bg-accent text-accent-foreground"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
     </div>

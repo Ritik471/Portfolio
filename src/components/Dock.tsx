@@ -18,21 +18,22 @@ const Dock = () => {
 
   return (
     <>
-      {/* Desktop Dock */}
+      {/* Desktop Dock — Bottom */}
       <motion.nav
-        initial={{ y: -20, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden md:block"
       >
         <div className="glass-strong rounded-2xl px-2 py-2 flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
+            const Icon = item.icon;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-200 ${
+                className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-200 ${
                   isActive
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -45,6 +46,7 @@ const Dock = () => {
                     transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                   />
                 )}
+                <Icon className="relative z-10 w-4 h-4" />
                 <span className="relative z-10">{item.label}</span>
               </Link>
             );
@@ -52,15 +54,15 @@ const Dock = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Toggle */}
+      {/* Mobile Toggle — Bottom Right */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed top-4 right-4 z-50 md:hidden glass-strong rounded-xl p-3"
+        className="fixed bottom-4 right-4 z-50 md:hidden glass-strong rounded-xl p-3"
       >
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer — Bottom Sheet */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
