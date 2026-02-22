@@ -1,151 +1,253 @@
-import { ExternalLink, Github } from "lucide-react";
+import { motion } from "framer-motion";
+import { Icon } from "@iconify/react";
+import { ExternalLink, Github, Globe, Code2 } from "lucide-react";
 import Reveal from "../components/Reveal";
 
 const projects = [
   {
-    title: "DevSync",
-    description: "Real-time collaborative code editor with multiplayer cursors, built on CRDTs and WebSocket architecture. Supports syntax highlighting for 30+ languages with sub-50ms latency.",
-    tags: ["TypeScript", "React", "WebSocket", "Rust"],
+    title: "Krishna Foods Platform",
+    description:
+      "A full-stack homemade food commerce platform with a WhatsApp-based ordering system. Built to empower a cloud kitchen business with a seamless user journey and localized SEO.",
+    tags: [
+      "logos:react",
+      "logos:nextjs-icon",
+      "logos:tailwindcss-icon",
+      "logos:typescript-icon",
+    ],
+    tech: ["React", "Next.js", "Tailwind", "WhatsApp API"],
+    live: "https://krishna-foods.netlify.app/",
+    source: "#",
+    featured: true,
+    color: "from-orange-500/20",
+    accent: "text-orange-400",
+  },
+  {
+    title: "AI SEO Engine (Dubai)",
+    description:
+      "Technical SEO optimization and metadata architecture for a leading Dubai-based AI company. Focused on structured data, JSON-LD, and keyword mapping to dominate regional search rankings.",
+    tags: [
+      "logos:google-search-console",
+      "logos:openai-icon",
+      "logos:google-cloud",
+    ],
+    tech: ["SEO Engineering", "Metadata Architecture", "AI Integration"],
     live: "#",
     source: "#",
     featured: true,
+    color: "from-cyan-500/20",
+    accent: "text-cyan-400",
   },
   {
-    title: "InfraWatch",
-    description: "Cloud infrastructure monitoring dashboard with real-time metrics, alerting, and cost optimization insights. Reduced client AWS spend by 35% through intelligent resource recommendations.",
-    tags: ["Go", "React", "PostgreSQL", "Docker"],
+    title: "DevSync Collaborative IDE",
+    description:
+      "Real-time collaborative code editor with multiplayer cursors, built on WebSocket architecture. Supports syntax highlighting for 30+ languages.",
+    tags: [
+      "logos:typescript-icon",
+      "logos:react",
+      "logos:socket-io",
+      "logos:rust",
+    ],
+    tech: ["TypeScript", "WebSocket", "Rust"],
     live: "#",
     source: "#",
-    featured: true,
+    color: "from-blue-500/10",
+    accent: "text-blue-400",
   },
   {
-    title: "Pipestream",
-    description: "Visual CI/CD pipeline builder with drag-and-drop workflow design and GitHub Actions integration. Used by 2,000+ developers for streamlined deployment workflows.",
-    tags: ["TypeScript", "Next.js", "GraphQL", "Redis"],
-    live: "#",
+    title: "Portfolio 2026",
+    description:
+      "The immersive software engineer dashboard you are currently viewing. High-performance design inspired by Linear & Vercel with a hidden Supabase-powered admin CMS.",
+    tags: ["logos:nextjs-icon", "logos:supabase-icon", "logos:framer-motion"],
+    tech: ["Next.js", "Supabase", "Framer Motion"],
+    live: "/",
     source: "#",
-  },
-  {
-    title: "CacheForge",
-    description: "High-performance distributed caching layer with consistent hashing and automatic failover. Handles 100K+ requests per second with 99.99% uptime.",
-    tags: ["Rust", "Redis", "gRPC", "Kubernetes"],
-    live: "#",
-    source: "#",
-  },
-  {
-    title: "QueryLab",
-    description: "Interactive SQL playground with AI-powered query suggestions, schema visualization, and performance analysis. Makes database exploration intuitive for teams of all sizes.",
-    tags: ["Python", "React", "PostgreSQL", "OpenAI"],
-    live: "#",
-    source: "#",
-  },
-  {
-    title: "Stacklog",
-    description: "Structured logging and distributed tracing toolkit for microservices with OpenTelemetry support. Provides end-to-end visibility across complex service meshes.",
-    tags: ["Go", "TypeScript", "OTEL", "Grafana"],
-    live: "#",
-    source: "#",
+    color: "from-emerald-500/10",
+    accent: "text-emerald-400",
   },
 ];
 
 const Projects = () => {
   return (
-    <div className="min-h-screen pb-28">
-      <section className="px-6 pt-16 pb-16">
-        <Reveal className="max-w-6xl mx-auto">
-          <p className="font-mono text-sm text-muted-foreground tracking-widest uppercase mb-4">
-            Projects
+    <div className="relative min-h-screen bg-[#030303] text-white selection:bg-cyan-500 selection:text-white pb-20 md:pb-28 overflow-x-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="absolute -bottom-[10%] -left-[10%] w-[70%] h-[70%] bg-cyan-600/10 blur-[140px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] -right-[5%] w-[50%] h-[50%] bg-emerald-600/10 blur-[120px] rounded-full" />
+      </div>
+
+      <section className="relative z-10 px-4 md:px-6 pt-32 md:pt-32 pb-16 md:pb-20 border-b border-white/10">
+        <Reveal className="max-w-7xl mx-auto">
+          <p className="font-mono text-[10px] text-cyan-400 tracking-[0.3em] uppercase mb-8">
+            // Selected_Works_2026
           </p>
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
-            Selected work.
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-cyan-400/50">
+              ENGINEERING
+            </span>{" "}
+            <br />
+            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-white/60 to-white/10 italic">
+              REAL-WORLD IMPACT.
+            </span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            A curated collection of projects that showcase my expertise in building performant,
-            scalable applications. Each project represents a unique challenge and solution.
+          <p className="max-w-2xl text-lg md:text-xl text-white/70 font-light leading-relaxed">
+            A curated collection of systems and interfaces built with focus on
+            <span className="text-cyan-400 font-normal"> performance</span>,
+            scalability, and technical SEO.
           </p>
         </Reveal>
       </section>
 
-      <div className="w-full h-px bg-border" />
+      <section className="relative z-10 py-12 md:py-24 px-4 md:px-6">
+        <div className="max-w-7xl mx-auto space-y-20 md:space-y-32">
+          {projects
+            .filter((p) => p.featured)
+            .map((project, i) => (
+              <Reveal key={project.title} delay={i * 0.1}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 items-center group">
+                  <div className="relative aspect-video rounded-2xl md:rounded-3xl border border-white/15 bg-white/[0.03] overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-cyan-500/40">
+                    <div className="absolute top-0 left-0 right-0 h-8 border-b border-white/10 bg-white/[0.05] flex items-center px-4 gap-1.5 backdrop-blur-md z-20">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
+                      <div className="ml-4 px-3 py-1 rounded-md bg-white/5 text-[9px] font-mono text-white/40 uppercase tracking-widest">
+                        {project.title.replace(/\s+/g, "_").toLowerCase()}.sh
+                      </div>
+                    </div>
 
-      {/* Featured Projects */}
-      <section className="py-20 px-6">
-        <Reveal className="max-w-7xl mx-auto mb-12">
-          <p className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Featured</p>
-        </Reveal>
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4 mb-12">
-          {projects.filter(p => p.featured).map((project, i) => (
-            <Reveal key={project.title} delay={i * 0.1}>
-              <div className="glass rounded-2xl overflow-hidden group hover:border-foreground/20 transition-colors h-full flex flex-col">
-                <div className="flex items-center gap-2 px-5 py-3 border-b border-border">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="font-mono text-xs text-muted-foreground ml-2">
-                    {project.title.toLowerCase()}.dev
-                  </span>
-                </div>
-                <div className="w-full aspect-[16/9] bg-accent/50 flex items-center justify-center">
-                  <span className="font-mono text-sm text-muted-foreground">Project Preview</span>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="font-mono text-[10px] px-2.5 py-1 rounded-md bg-accent text-muted-foreground">{tag}</span>
-                    ))}
-                  </div>
-                  <div className="flex gap-3">
-                    <a href={project.live} className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      <ExternalLink className="w-3.5 h-3.5" /> Live
-                    </a>
-                    <a href={project.source} className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      <Github className="w-3.5 h-3.5" /> Source
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+                    <div
+                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-tr ${project.color} to-transparent z-10`}
+                    />
 
-        {/* Other Projects */}
-        <Reveal className="max-w-7xl mx-auto mb-8">
-          <p className="font-mono text-xs text-muted-foreground tracking-widest uppercase">All Projects</p>
-        </Reveal>
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {projects.filter(p => !p.featured).map((project, i) => (
-            <Reveal key={project.title} delay={i * 0.08}>
-              <div className="glass rounded-2xl overflow-hidden group hover:border-foreground/20 transition-colors h-full flex flex-col">
-                <div className="flex items-center gap-2 px-5 py-3 border-b border-border">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="font-mono text-xs text-muted-foreground ml-2">{project.title.toLowerCase()}.dev</span>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="font-mono text-[10px] px-2.5 py-1 rounded-md bg-accent text-muted-foreground">{tag}</span>
-                    ))}
+                    <div className="absolute inset-0 flex items-center justify-center pt-8 pointer-events-none">
+                      <Icon
+                        icon={project.tags[0]}
+                        className={`absolute text-7xl md:text-9xl opacity-0 group-hover:opacity-20 blur-3xl transition-all duration-1000 ${project.accent}`}
+                      />
+                      <Icon
+                        icon={project.tags[0]}
+                        className={`relative text-6xl md:text-8xl opacity-20 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700 ${project.accent}`}
+                      />
+                    </div>
                   </div>
-                  <div className="flex gap-3">
-                    <a href={project.live} className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      <ExternalLink className="w-3.5 h-3.5" /> Live
-                    </a>
-                    <a href={project.source} className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      <Github className="w-3.5 h-3.5" /> Source
-                    </a>
+
+                  <div className="space-y-4 md:space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 ${project.accent} font-mono text-[10px] uppercase tracking-widest shadow-[0_0_15px_rgba(34,211,238,0.1)]`}
+                      >
+                        Featured Project
+                      </div>
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-white group-hover:translate-x-2 transition-transform duration-500">
+                      {project.title}
+                    </h3>
+                    <p className="text-base md:text-lg text-white/60 leading-relaxed font-light group-hover:text-white/90 transition-colors">
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-4 md:gap-6 pt-2">
+                      {project.tags.map((tag) => (
+                        <Icon
+                          key={tag}
+                          icon={tag}
+                          className="text-xl md:text-2xl grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all hover:scale-125"
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex flex-wrap gap-8 pt-4">
+                      <a
+                        href={project.live}
+                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-white/50 hover:text-cyan-400 transition-colors group/link"
+                      >
+                        <Globe className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
+                        View_Live
+                      </a>
+                      <a
+                        href={project.source}
+                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-white/50 hover:text-cyan-400 transition-colors group/link"
+                      >
+                        <Github className="w-4 h-4 group-hover/link:scale-110 transition-transform" />
+                        Source_Code
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
         </div>
       </section>
+
+      <section className="relative z-10 py-16 md:py-24 px-4 md:px-6 border-t border-white/10 bg-white/[0.01]">
+        <div className="max-w-7xl mx-auto">
+          <Reveal className="mb-16 text-left">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4">
+              The <span className="text-white/40 italic">Archive</span>
+            </h2>
+            <p className="text-cyan-400/80 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">
+              // Experimental & Minor Deployments
+            </p>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects
+              .filter((p) => !p.featured)
+              .map((project, i) => (
+                <Reveal key={project.title} delay={i * 0.1}>
+                  <div className="p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2rem] h-full hover:border-cyan-500/30 transition-all group flex flex-col relative overflow-hidden">
+                    <div
+                      className={`absolute -top-10 -right-10 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-br ${project.color}`}
+                    />
+
+                    <div className="flex justify-between items-start mb-12 relative z-10">
+                      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:border-cyan-500/40 transition-all">
+                        <Code2
+                          className={`w-6 h-6 text-white/30 group-hover:${project.accent} transition-colors`}
+                        />
+                      </div>
+                      <div className="flex gap-4">
+                        <a
+                          href={project.source}
+                          className="text-white/30 hover:text-white transition-colors"
+                        >
+                          <Github className="w-5 h-5" />
+                        </a>
+                        <a
+                          href={project.live}
+                          className="text-white/30 hover:text-white transition-colors"
+                        >
+                          <ExternalLink className="w-5 h-5" />
+                        </a>
+                      </div>
+                    </div>
+
+                    <h3 className="text-2xl font-semibold mb-4 tracking-tight text-white group-hover:text-cyan-100 transition-colors uppercase">
+                      {project.title}
+                    </h3>
+                    <p className="text-white/50 text-sm leading-relaxed mb-8 font-light line-clamp-3 flex-1">
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 relative z-10">
+                      {project.tech?.map((t) => (
+                        <span
+                          key={t}
+                          className="font-mono text-[9px] px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-white/40 group-hover:text-cyan-300 group-hover:border-cyan-500/20 transition-all uppercase"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="mt-20 text-center text-[10px] font-mono text-white/30 uppercase tracking-[0.5em] relative z-10">
+        © 2026 Ritik Shah — Portfolio_v2.sh
+      </footer>
     </div>
   );
 };
