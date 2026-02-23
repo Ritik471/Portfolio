@@ -134,7 +134,17 @@ const About = () => {
         let data;
 
         if (isLocal) {
-          const basic = btoa(`${import.meta.env.VITE_SPOTIFY_CLIENT_ID}:${import.meta.env.VITE_SPOTIFY_CLIENT_SECRET}`);
+          // Map local VITE variables to standard names for this block
+          const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+          const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+          const refreshToken = import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN;
+
+          // If local secrets are missing, exit early to avoid btoa error
+          if (!clientId || !clientSecret || !refreshToken) return;
+
+          const basic = btoa(`${clientId}:${clientSecret}`);
+
+          // 1. Get Access Token via Vite Proxy
           const tokenRes = await fetch("/spotify-token", {
             method: "POST",
             headers: {
@@ -143,11 +153,12 @@ const About = () => {
             },
             body: new URLSearchParams({
               grant_type: "refresh_token",
-              refresh_token: import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN,
+              refresh_token: refreshToken,
             }),
           });
           const { access_token } = await tokenRes.json();
 
+          // 2. Try "Now Playing"
           const nowPlayingRes = await fetch("/api-spotify/me/player/currently-playing", {
             headers: { Authorization: `Bearer ${access_token}` },
           });
@@ -167,6 +178,7 @@ const About = () => {
             }
           }
 
+          // 3. Fallback to "Recently Played"
           if (!data) {
             const recentRes = await fetch("/api-spotify/me/player/recently-played?limit=1", {
               headers: { Authorization: `Bearer ${access_token}` },
@@ -185,9 +197,13 @@ const About = () => {
             }
           }
         } else {
+          // --- PRODUCTION ---
+          // Hits the Netlify Function which securely has access to non-VITE secrets
           const res = await fetch("/.netlify/functions/now-playing");
           if (res.ok) data = await res.json();
         }
+
+        // Update State
         if (data && data.title) {
           setTrack({
             title: data.title,
@@ -197,9 +213,11 @@ const About = () => {
             link: data.link
           });
           setIsPlaying(data.isPlaying);
-          if (data.progressMs) setProgressMs(data.progressMs);
+          // Ensure progress resets to 0 if we are in history mode
+          setProgressMs(data.progressMs || 0);
         }
       } catch (err) {
+        // Catch errors silently
       }
     };
 
@@ -207,7 +225,6 @@ const About = () => {
     const interval = setInterval(fetchSpotify, 15000);
     return () => clearInterval(interval);
   }, []);
-
 
   // --- PROGRESS BAR LOGIC ---
   useEffect(() => {
