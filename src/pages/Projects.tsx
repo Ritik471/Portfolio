@@ -104,7 +104,11 @@ const Projects = () => {
             .map((project, i) => (
               <Reveal key={project.title} delay={i * 0.1}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 items-center group">
-                  <div className="relative aspect-video rounded-2xl md:rounded-3xl border border-white/15 bg-white/[0.03] overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-cyan-500/40">
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="relative aspect-video rounded-2xl md:rounded-3xl border border-white/15 bg-white/[0.03] overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-cyan-500/40"
+                  >
                     <div className="absolute top-0 left-0 right-0 h-8 border-b border-white/10 bg-white/[0.05] flex items-center px-4 gap-1.5 backdrop-blur-md z-20">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
@@ -128,7 +132,7 @@ const Projects = () => {
                         className={`relative text-6xl md:text-8xl opacity-20 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700 ${project.accent}`}
                       />
                     </div>
-                  </div>
+                  </motion.div>
 
                   <div className="space-y-4 md:space-y-6">
                     <div className="flex items-center gap-3">
@@ -194,7 +198,11 @@ const Projects = () => {
               .filter((p) => !p.featured)
               .map((project, i) => (
                 <Reveal key={project.title} delay={i * 0.1}>
-                  <div className="p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2rem] h-full hover:border-cyan-500/30 transition-all group flex flex-col relative overflow-hidden">
+                  <motion.div
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2rem] h-full hover:border-cyan-500/30 transition-all group flex flex-col relative overflow-hidden"
+                  >
                     <div
                       className={`absolute -top-10 -right-10 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-br ${project.color}`}
                     />
@@ -238,7 +246,7 @@ const Projects = () => {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 </Reveal>
               ))}
           </div>

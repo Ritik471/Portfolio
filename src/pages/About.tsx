@@ -1,13 +1,11 @@
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import {
-  Music,
-  ExternalLink,
   MapPin,
   Calendar,
   Coffee,
   BookOpen,
-  Cpu,
 } from "lucide-react";
 import Reveal from "../components/Reveal";
 
@@ -80,14 +78,167 @@ const skills = [
 ];
 
 const About = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progressMs, setProgressMs] = useState(0);
+  const [track, setTrack] = useState({
+    title: "",
+    artist: "Spotify",
+    albumArt: "https://i.scdn.co/image/ab67616d0000b273b5cecc2a52ae03ad213bf97c",
+    durationMs: 0,
+    link: "#"
+  });
+
+  const [wakaData, setWakaData] = useState([
+    { name: "TypeScript", percent: 45, color: "#60A5FA" },
+    { name: "React", percent: 25, color: "#22D3EE" },
+    { name: "Rust", percent: 15, color: "#FB923C" },
+    { name: "Other", percent: 15, color: "#9CA3AF" }
+  ]);
+  const [wakaTotalTime, setWakaTotalTime] = useState("34 hrs 12 mins");
+
+  // --- WAKATIME FETCH ---
+  useEffect(() => {
+    const ACTIVITY_URL = "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/cb282e26-c3b9-42a6-b9ed-9e4cc04da725.json";
+    const LANGUAGES_URL = "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/b21c1d91-8b1a-4892-a0ba-1fcded6e4bd8.json";
+
+    Promise.all([
+      fetch(ACTIVITY_URL).then(res => res.json()),
+      fetch(LANGUAGES_URL).then(res => res.json())
+    ])
+      .then(([activityRes, languagesRes]) => {
+        const days = activityRes.data;
+        if (Array.isArray(days)) {
+          const totalSeconds = days.reduce((acc: number, day: any) => acc + (day.grand_total?.total_seconds || 0), 0);
+          const hours = Math.floor(totalSeconds / 3600);
+          const mins = Math.floor((totalSeconds % 3600) / 60);
+          setWakaTotalTime(`${hours} hrs ${mins} mins`);
+        }
+
+        const langs = languagesRes.data;
+        if (Array.isArray(langs)) {
+          const topLangs = langs.slice(0, 4).map((lang: any) => ({
+            name: lang.name || "Other",
+            percent: lang.percent || 0,
+            color: lang.color || "#9CA3AF",
+          }));
+          setWakaData(topLangs);
+        }
+      })
+      .catch(() => { });
+  }, []);
+
+  useEffect(() => {
+    const fetchSpotify = async () => {
+      try {
+        const isLocal = window.location.hostname === "localhost";
+        let data;
+
+        if (isLocal) {
+          const basic = btoa(`${import.meta.env.VITE_SPOTIFY_CLIENT_ID}:${import.meta.env.VITE_SPOTIFY_CLIENT_SECRET}`);
+          const tokenRes = await fetch("/spotify-token", {
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${basic}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              grant_type: "refresh_token",
+              refresh_token: import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN,
+            }),
+          });
+          const { access_token } = await tokenRes.json();
+
+          const nowPlayingRes = await fetch("/api-spotify/me/player/currently-playing", {
+            headers: { Authorization: `Bearer ${access_token}` },
+          });
+
+          if (nowPlayingRes.status === 200) {
+            const song = await nowPlayingRes.json();
+            if (song.item) {
+              data = {
+                isPlaying: true,
+                title: song.item.name,
+                artist: song.item.artists.map((a: any) => a.name).join(', '),
+                albumArt: song.item.album.images[0].url,
+                link: song.item.external_urls.spotify,
+                durationMs: song.item.duration_ms,
+                progressMs: song.progress_ms,
+              };
+            }
+          }
+
+          if (!data) {
+            const recentRes = await fetch("/api-spotify/me/player/recently-played?limit=1", {
+              headers: { Authorization: `Bearer ${access_token}` },
+            });
+            const recentData = await recentRes.json();
+            if (recentData.items?.length > 0) {
+              const lastTrack = recentData.items[0].track;
+              data = {
+                isPlaying: false,
+                title: lastTrack.name,
+                artist: lastTrack.artists.map((a: any) => a.name).join(', '),
+                albumArt: lastTrack.album.images[0].url,
+                link: lastTrack.external_urls.spotify,
+                durationMs: lastTrack.duration_ms,
+              };
+            }
+          }
+        } else {
+          const res = await fetch("/.netlify/functions/now-playing");
+          if (res.ok) data = await res.json();
+        }
+        if (data && data.title) {
+          setTrack({
+            title: data.title,
+            artist: data.artist,
+            albumArt: data.albumArt,
+            durationMs: data.durationMs || 0,
+            link: data.link
+          });
+          setIsPlaying(data.isPlaying);
+          if (data.progressMs) setProgressMs(data.progressMs);
+        }
+      } catch (err) {
+      }
+    };
+
+    fetchSpotify();
+    const interval = setInterval(fetchSpotify, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+
+  // --- PROGRESS BAR LOGIC ---
+  useEffect(() => {
+    let progressInterval: NodeJS.Timeout;
+    if (isPlaying && track.durationMs > 0) {
+      progressInterval = setInterval(() => {
+        setProgressMs(prev => {
+          if (prev >= track.durationMs) return prev;
+          return prev + 1000;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(progressInterval);
+  }, [isPlaying, track.durationMs, track.title]);
+
+  const formatTime = (ms: number) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
+    return `${minutes}:${Number(seconds) < 10 ? '0' : ''}${seconds}`;
+  };
+
   return (
     <div className="relative min-h-screen bg-[#030303] text-white selection:bg-blue-500 selection:text-white pb-20 md:pb-28 overflow-x-hidden">
+      {/* Background Ambience */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-600/10 blur-[140px] rounded-full" />
       </div>
 
+      {/* Hero Section */}
       <section className="relative z-10 px-4 md:px-6 pt-32 md:pt-32 pb-16 md:pb-20 border-b border-white/10">
         <Reveal className="max-w-7xl mx-auto">
           <p className="font-mono text-[10px] text-blue-400 tracking-[0.3em] uppercase mb-8">
@@ -113,6 +264,7 @@ const About = () => {
         </Reveal>
       </section>
 
+      {/* Highlights Grid */}
       <section className="relative z-10 py-12 md:py-16 px-4 md:px-6 border-b border-white/10 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {highlights.map((h, i) => {
@@ -138,10 +290,14 @@ const About = () => {
         </div>
       </section>
 
+      {/* Narrative & Live Widgets */}
       <section className="relative z-10 py-16 md:py-24 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <Reveal>
-            <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-white/60 font-light leading-relaxed">
+        {/* items-stretch ensures the total height of both columns is identical */}
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
+
+          {/* LEFT COLUMN: Narrative Bio */}
+          <Reveal className="h-full">
+            <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-white/60 font-light leading-relaxed h-full flex flex-col justify-center">
               <p>
                 I'm <span className="text-white font-medium">Ritik Shah</span>,
                 a software engineer with a deep passion for building scalable
@@ -171,64 +327,121 @@ const About = () => {
             </div>
           </Reveal>
 
-          <div className="space-y-6">
-            <Reveal delay={0.2}>
-              <div className="p-6 md:p-8 border border-white/10 bg-white/[0.03] rounded-3xl md:rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[#1DB954]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="flex items-center gap-3 mb-8">
-                  <Icon
-                    icon="line-md:spotify-loop"
-                    className="text-2xl text-[#1DB954]"
-                  />
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-white/40">
-                    Current Rotation
-                  </p>
-                </div>
-                <div className="flex items-center gap-4 md:gap-6 relative z-10">
-                  <div className="relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-white/5 flex items-center justify-center border border-white/10">
-                    <Music className="w-6 h-6 md:w-8 md:h-8 text-[#1DB954]/40 animate-pulse" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xl md:text-2xl font-bold tracking-tight truncate text-white">
-                      Midnight City
-                    </p>
-                    <p className="text-xs md:text-sm text-white/40 truncate">
-                      M83 — Hurry Up, We're Dreaming
+          {/* RIGHT COLUMN: Widgets Stack */}
+          <div className="space-y-6 flex flex-col h-full">
+
+            {/* Spotify Widget - flex-1 allows it to grow to fill half the space */}
+            <Reveal delay={0.2} className="flex-1">
+              <div className="p-6 md:p-8 border border-white/10 bg-white/[0.03] rounded-3xl md:rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group hover:border-[#1DB954]/50 transition-all duration-500 shadow-2xl h-full flex flex-col justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                <div className="flex items-center justify-between mb-8 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <Icon
+                      icon="logos:spotify-icon"
+                      className={`text-2xl ${isPlaying ? 'animate-spin-slow' : ''}`}
+                    />
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-[#1DB954]">
+                      {isPlaying ? "Currently Listening" : "Last Played"}
                     </p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-white/20 hover:text-[#1DB954] transition-colors flex-shrink-0" />
                 </div>
-                <div className="mt-8 h-1 w-full bg-white/10 rounded-full overflow-hidden relative z-10">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "65%" }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                    className="h-full bg-[#1DB954] shadow-[0_0_10px_#1DB954]"
-                  />
+
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10 text-center sm:text-left">
+                  <div className="relative flex-shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(29,185,84,0.2)] group-hover:shadow-[0_0_50px_rgba(29,185,84,0.4)] transition-shadow duration-500">
+                    <img src={track.albumArt} alt="Album Art" className={`w-full h-full object-cover transition-transform duration-1000 ${isPlaying ? 'scale-110' : 'scale-100'} group-hover:scale-110`} />
+                    {isPlaying && (
+                      <div className="absolute inset-0 bg-[#1DB954]/20 mix-blend-overlay animate-pulse" />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0 flex flex-col justify-center h-full pt-2">
+                    <a href={track.link} target="_blank" rel="noreferrer" className="group/link block">
+                      <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-2 truncate group-hover/link:text-[#1DB954] transition-colors">
+                        {track.title || "Offline"}
+                      </p>
+                    </a>
+                    <p className="text-sm md:text-base text-white/50 truncate font-light">
+                      {track.title ? track.artist : "Syncing Spotify..."}
+                    </p>
+
+                    {isPlaying && (
+                      <div className="w-full mt-4 animate-in fade-in duration-500">
+                        <div className="flex justify-between text-[10px] font-mono text-white/40 mb-2">
+                          <span>{formatTime(progressMs)}</span>
+                          <span>{formatTime(track.durationMs)}</span>
+                        </div>
+                        <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                          <motion.div
+                            animate={{ width: `${(progressMs / track.durationMs) * 100}%` }}
+                            transition={{ duration: 1, ease: "linear" }}
+                            className="h-full bg-[#1DB954]"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={0.3}>
-              <div className="p-6 md:p-8 border border-white/10 bg-white/[0.02] rounded-3xl md:rounded-[2.5rem] flex items-center justify-between gap-4 group hover:border-blue-500/30 transition-all backdrop-blur-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Cpu className="w-5 h-5 text-blue-400" />
+            {/* WakaTime Widget - flex-1 allows it to fill the other half of the space */}
+            <Reveal delay={0.3} className="flex-1">
+              <div className="p-6 md:p-8 border border-white/10 bg-white/[0.02] rounded-3xl md:rounded-[2.5rem] flex flex-col justify-between gap-4 group hover:border-purple-500/30 transition-all backdrop-blur-sm h-full shadow-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                <div className="flex items-center justify-between mb-4 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <Icon icon="simple-icons:wakatime" className="text-2xl text-white/80" />
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-white/40">
+                      WakaTime / 7 Days
+                    </p>
                   </div>
-                  <p className="font-mono text-sm text-white/60 group-hover:text-white/90 transition-colors">
-                    Specializing in Monorepos & SEO
-                  </p>
+                  <div className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono text-[10px] uppercase tracking-widest rounded-full">
+                    Live
+                  </div>
                 </div>
-                <Icon
-                  icon="line-md:confirm-circle"
-                  className="text-green-500 text-xl flex-shrink-0"
-                />
+
+                <div className="relative z-10">
+                  <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 group-hover:text-purple-100 transition-colors">
+                    {wakaTotalTime}
+                  </p>
+
+                  <div className="flex w-full h-2 rounded-full overflow-hidden gap-0.5 mb-6 bg-white/10">
+                    {wakaData.map(lang => (
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${lang.percent}%` }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        key={lang.name}
+                        className="h-full relative group/bar"
+                        style={{ backgroundColor: lang.color }}
+                      >
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-white border border-black/10 text-black text-[10px] font-bold rounded opacity-0 group-hover/bar:opacity-100 pointer-events-none transition-opacity z-20 whitespace-nowrap">
+                          {lang.name} - {lang.percent.toFixed(1)}%
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-x-6 gap-y-3">
+                    {wakaData.map(lang => (
+                      <div key={lang.name} className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full shadow-lg" style={{ backgroundColor: lang.color }} />
+                        <span className="text-xs text-white/60 font-mono uppercase group-hover:text-white/80 transition-colors">
+                          {lang.name} <span className="text-white/60">({lang.percent.toFixed(1)}%)</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
+      {/* Expertise Section */}
       <section className="relative z-10 py-16 md:py-24 px-4 md:px-6 border-t border-white/10 bg-white/[0.01]">
         <Reveal className="max-w-7xl mx-auto mb-16 text-left lg:text-left">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4">

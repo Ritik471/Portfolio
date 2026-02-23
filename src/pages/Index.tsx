@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { Icon } from "@iconify/react";
 import {
   ArrowRight,
@@ -10,9 +10,11 @@ import {
   Code2,
   FileText,
   ChevronDown,
+  Terminal,
 } from "lucide-react";
 import Reveal from "../components/Reveal";
 import { Link } from "react-router-dom";
+import { GitHubCalendar } from "react-github-calendar";
 
 const techStack = [
   {
@@ -96,7 +98,7 @@ const services = [
     icon: <Monitor className="w-6 h-6" />,
     accent: "text-blue-400",
     hoverBorder: "hover:border-blue-400/50",
-    glow: "bg-blue-400",
+    glow: "bg-blue-800",
   },
   {
     title: "Mobile Solutions",
@@ -104,7 +106,7 @@ const services = [
     icon: <Smartphone className="w-6 h-6" />,
     accent: "text-emerald-400",
     hoverBorder: "hover:border-emerald-400/50",
-    glow: "bg-emerald-400",
+    glow: "bg-emerald-800",
   },
   {
     title: "SEO Architecture",
@@ -112,7 +114,7 @@ const services = [
     icon: <Search className="w-6 h-6" />,
     accent: "text-yellow-400",
     hoverBorder: "hover:border-yellow-400/50",
-    glow: "bg-yellow-400",
+    glow: "bg-yellow-800",
   },
   {
     title: "System Design",
@@ -120,7 +122,7 @@ const services = [
     icon: <Cpu className="w-6 h-6" />,
     accent: "text-purple-400",
     hoverBorder: "hover:border-purple-400/50",
-    glow: "bg-purple-400",
+    glow: "bg-purple-800",
   },
 ];
 
@@ -151,9 +153,7 @@ const principles = [
 interface GitHubData {
   repos: string;
   stars: string;
-  contributions: string;
-  currentStreak: string;
-  longestStreak: string;
+  followers: string;
   forks: string;
   languages: { name: string; pct: number; color: string }[];
 }
@@ -161,39 +161,99 @@ interface GitHubData {
 const Index = () => {
   const [data, setData] = useState<GitHubData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeCommand, setActiveCommand] = useState(0);
+
+  const terminalCommands = [
+    { cmd: "npm run test:architecture", output: "PASS  src/systems/core.test.ts\n✓ Engine initialized (42ms)\n✓ Event loop boundary checked" },
+    { cmd: "docker-compose up -d production", output: "Starting postgis-db ... done\nStarting redis-cache ... done\nStarting auth-gateway ... done" },
+    { cmd: "rustc compile_node.rs --release", output: "Compiling starfall_node v1.0.4\nFinished release [optimized] target(s) in 1.42s" },
+  ];
+
+  const { scrollY } = useScroll();
+  const yHero = useTransform(scrollY, [0, 1000], [0, 150]);
+  const yBg1 = useTransform(scrollY, [0, 1000], [0, 300]);
+  const yBg2 = useTransform(scrollY, [0, 1000], [0, -200]);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  const cursorX = useSpring(mouseX, { stiffness: 100, damping: 20, mass: 0.5 });
+  const cursorY = useSpring(mouseY, { stiffness: 100, damping: 20, mass: 0.5 });
 
   useEffect(() => {
     const fetchGitHubStats = async () => {
       try {
-        const username = "Ritik471";
+        const username = "ritik471";
         const userRes = await fetch(`https://api.github.com/users/${username}`);
         const userJson = await userRes.json();
-        const reposRes = await fetch(
-          `https://api.github.com/users/${username}/repos?per_page=100`,
-        );
-        const reposJson = await reposRes.json();
 
-        const totalStars = reposJson.reduce(
+        let allRepos: any[] = [];
+        let page = 1;
+        while (true) {
+          const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&page=${page}`);
+          const reposJson = await reposRes.json();
+          if (reposJson.length === 0) break;
+          allRepos = [...allRepos, ...reposJson];
+          if (reposJson.length < 100) break;
+          page++;
+        }
+
+        const totalStars = allRepos.reduce(
           (acc: number, repo: any) => acc + repo.stargazers_count,
           0,
         );
+        const totalForks = allRepos.reduce(
+          (acc: number, repo: any) => acc + repo.forks_count,
+          0,
+        );
 
-        const sortedLangs = [
-          { name: "TypeScript", pct: 40, color: "bg-blue-400" },
-          { name: "Python", pct: 25, color: "bg-yellow-400" },
-          { name: "Go", pct: 15, color: "bg-cyan-400" },
-          { name: "Rust", pct: 10, color: "bg-orange-400" },
-          { name: "Other", pct: 10, color: "bg-gray-400" },
-        ];
+        const langCounts: Record<string, number> = {};
+        let totalLangs = 0;
+        allRepos.forEach((repo: any) => {
+          if (repo.language) {
+            langCounts[repo.language] = (langCounts[repo.language] || 0) + 1;
+            totalLangs++;
+          }
+        });
+
+        const langColors: Record<string, string> = {
+          TypeScript: "bg-blue-400",
+          JavaScript: "bg-yellow-400",
+          Python: "bg-green-400",
+          Rust: "bg-orange-400",
+          Go: "bg-cyan-400",
+          Dart: "bg-blue-300",
+          HTML: "bg-orange-500",
+          CSS: "bg-pink-400",
+          Java: "bg-red-400",
+          PHP: "bg-indigo-400",
+          C: "bg-gray-300"
+        };
+
+        const sortedLangs = Object.entries(langCounts)
+          .map(([name, count]) => ({
+            name,
+            pct: Math.round((count / totalLangs) * 100),
+            color: langColors[name] || "bg-gray-400",
+          }))
+          .sort((a, b) => b.pct - a.pct)
+          .slice(0, 5);
 
         setData({
-          repos: userJson.public_repos?.toString() || "42",
-          stars: totalStars.toString() || "180",
-          contributions: "1,840",
-          currentStreak: "13",
-          longestStreak: "13",
+          repos: userJson.public_repos?.toString() || "0",
+          stars: totalStars.toString() || "0",
+          followers: userJson.followers?.toString() || "0",
+          forks: totalForks.toString() || "0",
           languages: sortedLangs,
-          forks: "1,840",
         });
       } catch (error) {
         console.error(error);
@@ -218,9 +278,9 @@ const Index = () => {
       text: "text-yellow-400",
     },
     {
-      label: "Contributions",
-      value: data?.contributions || "0",
-      icon: "line-md:calendar",
+      label: "Followers",
+      value: data?.followers || "0",
+      icon: "line-md:account",
       text: "text-emerald-400",
     },
     {
@@ -233,10 +293,20 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-[#030303] text-white selection:bg-blue-500 selection:text-white overflow-x-hidden">
+      {/* Interactive Cursor Glow */}
+      <motion.div
+        className="pointer-events-none fixed inset-0 z-50 w-8 h-8 rounded-full bg-blue-500/20 blur-xl mix-blend-screen"
+        style={{
+          x: cursorX,
+          y: cursorY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+      />
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-        <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full animate-pulse" />
-        <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-600/10 blur-[140px] rounded-full" />
+        <motion.div style={{ y: yBg1 }} className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full animate-pulse" />
+        <motion.div style={{ y: yBg2 }} className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-600/10 blur-[140px] rounded-full" />
         <div className="absolute -bottom-[10%] left-[10%] w-[50%] h-[50%] bg-emerald-600/5 blur-[140px] rounded-full" />
       </div>
 
@@ -296,22 +366,26 @@ const Index = () => {
           </p>
         </Reveal>
 
-        <div className="flex flex-col sm:flex-row gap-5 font-mono items-center">
-          <Link
-            to="/projects"
-            className="w-64 py-4 bg-white text-black font-bold rounded-full hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group shadow-xl"
-          >
-            Explore Projects
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <a
-            href="/cv.pdf"
-            download
-            className="w-64 py-4 border border-white/20 rounded-full hover:border-blue-500/50 hover:bg-white/5 transition-all text-white/90 backdrop-blur-sm flex items-center justify-center gap-2 group"
-          >
-            <FileText className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
-            Download CV
-          </a>
+        <div className="flex flex-col sm:flex-row gap-5 font-mono items-center z-20">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              to="/projects"
+              className="w-64 py-4 bg-white text-black font-bold rounded-full hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group shadow-xl"
+            >
+              Explore Projects
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <a
+              href="/cv.pdf"
+              download
+              className="w-64 py-4 border border-white/20 rounded-full hover:border-blue-500/50 hover:bg-white/5 transition-all text-white/90 backdrop-blur-sm flex items-center justify-center gap-2 group"
+            >
+              <FileText className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
+              Download CV
+            </a>
+          </motion.div>
         </div>
 
         <motion.div
@@ -348,7 +422,11 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {services.map((service, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="group relative h-full rounded-[2rem] cursor-pointer transition-all duration-500">
+              <motion.div
+                whileHover={{ y: -10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="group relative h-full rounded-[2rem] cursor-pointer"
+              >
                 <div
                   className={`relative h-full p-8 rounded-[2rem] bg-white/[0.03] backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 ${service.hoverBorder}`}
                 >
@@ -360,17 +438,17 @@ const Index = () => {
                   >
                     {service.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 tracking-tight text-white/90 transition-colors duration-300 group-hover:text-white uppercase">
+                  <h3 className="text-lg font-bold mb-3 tracking-tight text-white/90 transition-colors duration-300 group-hover:text-white uppercase">
                     {service.title}
                   </h3>
                   <div
-                    className={`w-12 h-[2px] bg-white/10 mb-4 transition-all duration-500 group-hover:w-full ${service.glow}`}
+                    className={`w-12 h-[2px] mb-4 transition-all duration-500 group-hover:w-full ${service.glow}`}
                   />
                   <p className="text-sm text-white/50 leading-relaxed font-light transition-colors duration-300 group-hover:text-white/80">
                     {service.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </Reveal>
           ))}
         </div>
@@ -391,7 +469,11 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {principles.map((p, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="group relative p-8 md:p-10 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] md:rounded-[2.5rem] hover:border-white/30 transition-all duration-500 overflow-hidden h-full backdrop-blur-sm">
+              <motion.div
+                whileHover={{ y: -10, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="group relative p-8 md:p-10 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] md:rounded-[2.5rem] hover:border-white/30 transition-all duration-500 overflow-hidden h-full backdrop-blur-sm"
+              >
                 <div
                   className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${p.glow}`}
                 />
@@ -408,7 +490,7 @@ const Index = () => {
                 <p className="text-white/60 text-sm md:text-base leading-relaxed group-hover:text-white/80 transition-colors duration-500 font-light relative z-10">
                   {p.desc}
                 </p>
-              </div>
+              </motion.div>
             </Reveal>
           ))}
         </div>
@@ -430,7 +512,10 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {techStack.map((tech, i) => (
               <Reveal key={tech.name} delay={i * 0.05}>
-                <div
+                <motion.div
+                  whileHover={{ y: -5, scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  whileTap={{ scale: 0.95 }}
                   className={`p-8 border border-white/10 bg-white/[0.02] cursor-pointer backdrop-blur-md rounded-[2rem] flex flex-col items-center gap-4 group transition-all duration-500 ${tech.border} ${tech.color} hover:bg-white/[0.05]`}
                 >
                   <Icon
@@ -440,7 +525,7 @@ const Index = () => {
                   <span className="font-mono text-[10px] uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">
                     {tech.name}
                   </span>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -463,7 +548,11 @@ const Index = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           {stats.map((stat, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="p-8 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] text-center group hover:border-white/30 transition-all backdrop-blur-sm">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="p-8 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] text-center group hover:border-white/30 transition-all backdrop-blur-sm"
+              >
                 <Icon
                   icon={stat.icon}
                   className={`mx-auto text-2xl mb-4 text-white/30 group-hover:scale-110 transition-all ${stat.text}`}
@@ -476,15 +565,36 @@ const Index = () => {
                 <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             </Reveal>
           ))}
         </div>
 
-        <Reveal delay={0.4} className="max-w-4xl mx-auto w-full">
+        <Reveal delay={0.4} className="max-w-[950px] mx-auto w-full mb-12">
+          <div className="rounded-[2.5rem] p-10 border border-white/10 bg-white/[0.03] backdrop-blur-md overflow-x-auto overflow-y-hidden text-sm">
+            <p className="font-mono text-sm text-white/60 mb-8 uppercase tracking-widest text-center">
+              Contribution Heatmap
+            </p>
+            <div className="flex justify-center min-w-[750px] md:min-w-fit">
+              <GitHubCalendar
+                username="Ritik471"
+                colorScheme="dark"
+                theme={{
+                  dark: ['#1e1e24', '#042d17', '#034a26', '#036531', '#01833c'] // Custom Hacker/Emerald mapping
+                }}
+                fontSize={12}
+                blockSize={12}
+                blockMargin={4}
+                blockRadius={2}
+              />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.5} className="max-w-[950px] mx-auto w-full">
           <div className="rounded-[2.5rem] p-10 border border-white/10 cursor-pointer bg-white/[0.03] backdrop-blur-md">
             <p className="font-mono text-sm text-white/60 mb-8 uppercase tracking-widest text-center">
-              Top Languages
+              Top Languages Frequency
             </p>
             <div className="flex w-full h-3 rounded-full overflow-hidden gap-1 mb-10 bg-white/10">
               {data?.languages.map((lang) => (
@@ -523,17 +633,19 @@ const Index = () => {
               Scale?
             </span>
           </h2>
-          <Link
-            to="/contact"
-            className="group text-xl md:text-2xl font-light inline-flex items-center justify-center gap-6 transition-all"
-          >
-            <span className="hover:text-blue-400 transition-colors">
-              Initiate Collaboration
-            </span>
-            <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-              <ArrowRight className="w-6 h-6" />
-            </div>
-          </Link>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+            <Link
+              to="/contact"
+              className="group text-xl md:text-2xl font-light inline-flex items-center justify-center gap-6 transition-all"
+            >
+              <span className="hover:text-blue-400 transition-colors">
+                Initiate Collaboration
+              </span>
+              <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                <ArrowRight className="w-6 h-6" />
+              </div>
+            </Link>
+          </motion.div>
         </Reveal>
         <div className="mt-20 text-center text-[10px] font-mono text-white/30 uppercase tracking-[0.5em] relative z-10">
           © 2026 Ritik Shah — All Rights Reserved
