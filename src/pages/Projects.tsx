@@ -7,60 +7,29 @@ const projects = [
   {
     title: "Krishna Foods Platform",
     description:
-      "A full-stack homemade food commerce platform with a WhatsApp-based ordering system. Built to empower a cloud kitchen business with a seamless user journey and localized SEO.",
+      "A comprehensive digital platform for a cloud kitchen to streamline online presence and order management. Built with a custom WhatsApp ordering system and digital menu.",
     tags: [
-      "logos:react",
       "logos:nextjs-icon",
       "logos:tailwindcss-icon",
       "logos:typescript-icon",
+      "logos:react",
     ],
-    tech: ["React", "Next.js", "Tailwind", "WhatsApp API"],
+    tech: ["Next.js", "Tailwind CSS", "WhatsApp API", "Cloud Kitchen"],
     live: "https://krishna-foods.netlify.app/",
-    source: "#",
+    source: "https://github.com/Ritik471",
     featured: true,
     color: "from-orange-500/20",
     accent: "text-orange-400",
   },
   {
-    title: "AI SEO Engine (Dubai)",
+    title: "Personal Portfolio 2026",
     description:
-      "Technical SEO optimization and metadata architecture for a leading Dubai-based AI company. Focused on structured data, JSON-LD, and keyword mapping to dominate regional search rankings.",
-    tags: [
-      "logos:google-search-console",
-      "logos:openai-icon",
-      "logos:google-cloud",
-    ],
-    tech: ["SEO Engineering", "Metadata Architecture", "AI Integration"],
-    live: "#",
-    source: "#",
+      "An immersive software engineer dashboard with high-performance design. Features a custom theme system, interactive cursor effects, and responsive glassmorphic UI.",
+    tags: ["logos:nextjs-icon", "logos:framer-motion", "logos:tailwindcss-icon"],
+    tech: ["Next.js", "Framer Motion", "Tailwind CSS"],
+    live: "https://ritikshah-portfolio.netlify.app/",
+    source: "https://github.com/Ritik471/starfall-port",
     featured: true,
-    color: "from-cyan-500/20",
-    accent: "text-cyan-400",
-  },
-  {
-    title: "DevSync Collaborative IDE",
-    description:
-      "Real-time collaborative code editor with multiplayer cursors, built on WebSocket architecture. Supports syntax highlighting for 30+ languages.",
-    tags: [
-      "logos:typescript-icon",
-      "logos:react",
-      "logos:socket-io",
-      "logos:rust",
-    ],
-    tech: ["TypeScript", "WebSocket", "Rust"],
-    live: "#",
-    source: "#",
-    color: "from-blue-500/10",
-    accent: "text-blue-400",
-  },
-  {
-    title: "Portfolio 2026",
-    description:
-      "The immersive software engineer dashboard you are currently viewing. High-performance design inspired by Linear & Vercel with a hidden Supabase-powered admin CMS.",
-    tags: ["logos:nextjs-icon", "logos:supabase-icon", "logos:framer-motion"],
-    tech: ["Next.js", "Supabase", "Framer Motion"],
-    live: "/",
-    source: "#",
     color: "from-emerald-500/10",
     accent: "text-emerald-400",
   },
@@ -68,28 +37,28 @@ const projects = [
 
 const Projects = () => {
   return (
-    <div className="relative min-h-screen bg-[#030303] text-white selection:bg-cyan-500 selection:text-white pb-20 md:pb-28 overflow-x-hidden">
+    <div className="relative min-h-screen themed-bg themed-text selection:bg-cyan-500 pb-20 md:pb-28 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <div className="absolute -bottom-[10%] -left-[10%] w-[70%] h-[70%] bg-cyan-600/10 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute top-[-10%] -right-[5%] w-[50%] h-[50%] bg-emerald-600/10 blur-[120px] rounded-full" />
       </div>
 
-      <section className="relative z-10 px-4 md:px-6 pt-32 md:pt-32 pb-16 md:pb-20 border-b border-white/10">
-        <Reveal className="max-w-7xl mx-auto">
+      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-0 pt-32 md:pt-32 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <Reveal>
           <p className="font-mono text-[10px] text-cyan-400 tracking-[0.3em] uppercase mb-8">
             // Selected_Works_2026
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-cyan-400/50">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-cyan-400/50">
               ENGINEERING
             </span>{" "}
             <br />
-            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-white/60 to-white/10 italic">
+            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
               REAL-WORLD IMPACT.
             </span>
           </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-white/70 font-light leading-relaxed">
+          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
             A curated collection of systems and interfaces built with focus on
             <span className="text-cyan-400 font-normal"> performance</span>,
             scalability, and technical SEO.
@@ -97,8 +66,8 @@ const Projects = () => {
         </Reveal>
       </section>
 
-      <section className="relative z-10 py-12 md:py-24 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto space-y-20 md:space-y-32">
+      <section className="relative z-10 py-12 md:py-24 max-w-7xl mx-auto px-6 lg:px-0">
+        <div className=" space-y-20 md:space-y-32">
           {projects
             .filter((p) => p.featured)
             .map((project, i) => (
@@ -107,13 +76,14 @@ const Projects = () => {
                   <motion.div
                     whileHover={{ scale: 1.02, y: -5 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="relative aspect-video rounded-2xl md:rounded-3xl border border-white/15 bg-white/[0.03] overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-cyan-500/40"
+                    className="relative aspect-video rounded-2xl md:rounded-3xl border overflow-hidden shadow-2xl transition-all duration-700 group-hover:border-cyan-500/40"
+                    style={{ borderColor: 'rgba(var(--surface),0.15)', background: 'rgba(var(--surface),0.03)' }}
                   >
-                    <div className="absolute top-0 left-0 right-0 h-8 border-b border-white/10 bg-white/[0.05] flex items-center px-4 gap-1.5 backdrop-blur-md z-20">
+                    <div className="absolute top-0 left-0 right-0 h-8 border-b flex items-center px-4 gap-1.5 backdrop-blur-md z-20" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.05)' }}>
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
                       <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
-                      <div className="ml-4 px-3 py-1 rounded-md bg-white/5 text-[9px] font-mono text-white/40 uppercase tracking-widest">
+                      <div className="ml-4 px-3 py-1 rounded-md text-[9px] font-mono text-muted-foreground uppercase tracking-widest" style={{ background: 'rgba(var(--surface),0.05)' }}>
                         {project.title.replace(/\s+/g, "_").toLowerCase()}.sh
                       </div>
                     </div>
@@ -142,10 +112,10 @@ const Projects = () => {
                         Featured Project
                       </div>
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-white group-hover:translate-x-2 transition-transform duration-500">
+                    <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground group-hover:translate-x-2 transition-transform duration-500">
                       {project.title}
                     </h3>
-                    <p className="text-base md:text-lg text-white/60 leading-relaxed font-light group-hover:text-white/90 transition-colors">
+                    <p className="text-base md:text-lg text-muted-foreground leading-relaxed font-light group-hover:text-foreground/90 transition-colors">
                       {project.description}
                     </p>
 
@@ -162,14 +132,18 @@ const Projects = () => {
                     <div className="flex flex-wrap gap-8 pt-4">
                       <a
                         href={project.live}
-                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-white/50 hover:text-cyan-400 transition-colors group/link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-muted-foreground hover:text-cyan-400 transition-colors group/link"
                       >
                         <Globe className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
                         View_Live
                       </a>
                       <a
                         href={project.source}
-                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-white/50 hover:text-cyan-400 transition-colors group/link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-muted-foreground hover:text-cyan-400 transition-colors group/link"
                       >
                         <Github className="w-4 h-4 group-hover/link:scale-110 transition-transform" />
                         Source_Code
@@ -182,11 +156,11 @@ const Projects = () => {
         </div>
       </section>
 
-      <section className="relative z-10 py-16 md:py-24 px-4 md:px-6 border-t border-white/10 bg-white/[0.01]">
+      <section className="relative z-10 py-16 md:py-24 max-w-7xl mx-auto px-6 lg:px-0 border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-16 text-left">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4">
-              The <span className="text-white/40 italic">Archive</span>
+              The <span className="text-muted-foreground italic">Archive</span>
             </h2>
             <p className="text-cyan-400/80 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">
               // Experimental & Minor Deployments
@@ -201,38 +175,43 @@ const Projects = () => {
                   <motion.div
                     whileHover={{ y: -10, scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2rem] h-full hover:border-cyan-500/30 transition-all group flex flex-col relative overflow-hidden"
+                    className="p-8 border backdrop-blur-md rounded-[2rem] h-full hover:border-cyan-500/30 transition-all group flex flex-col relative overflow-hidden"
+                    style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}
                   >
                     <div
-                      className={`absolute -top-10 -right-10 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-br ${project.color}`}
+                      className={`absolute -top-10 -right-10 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-br ${project.color} pointer-events-none`}
                     />
 
                     <div className="flex justify-between items-start mb-12 relative z-10">
-                      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:border-cyan-500/40 transition-all">
+                      <div className="p-4 rounded-2xl border group-hover:border-cyan-500/40 transition-all" style={{ background: 'rgba(var(--surface),0.05)', borderColor: 'rgba(var(--surface),0.1)' }}>
                         <Code2
-                          className={`w-6 h-6 text-white/30 group-hover:${project.accent} transition-colors`}
+                          className={`w-6 h-6 text-muted-foreground group-hover:${project.accent} transition-colors`}
                         />
                       </div>
                       <div className="flex gap-4">
                         <a
                           href={project.source}
-                          className="text-white/30 hover:text-white transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <Github className="w-5 h-5" />
                         </a>
                         <a
                           href={project.live}
-                          className="text-white/30 hover:text-white transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <ExternalLink className="w-5 h-5" />
                         </a>
                       </div>
                     </div>
 
-                    <h3 className="text-2xl font-semibold mb-4 tracking-tight text-white group-hover:text-cyan-100 transition-colors uppercase">
+                    <h3 className="text-2xl font-semibold mb-4 tracking-tight text-foreground group-hover:text-cyan-100 transition-colors uppercase">
                       {project.title}
                     </h3>
-                    <p className="text-white/50 text-sm leading-relaxed mb-8 font-light line-clamp-3 flex-1">
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-8 font-light line-clamp-3 flex-1">
                       {project.description}
                     </p>
 
@@ -240,7 +219,8 @@ const Projects = () => {
                       {project.tech?.map((t) => (
                         <span
                           key={t}
-                          className="font-mono text-[9px] px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-white/40 group-hover:text-cyan-300 group-hover:border-cyan-500/20 transition-all uppercase"
+                          className="font-mono text-[9px] px-3 py-1.5 rounded-lg border text-muted-foreground group-hover:text-cyan-300 group-hover:border-cyan-500/20 transition-all uppercase"
+                          style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.05)' }}
                         >
                           {t}
                         </span>
@@ -253,7 +233,7 @@ const Projects = () => {
         </div>
       </section>
 
-      <footer className="mt-20 text-center text-[10px] font-mono text-white/30 uppercase tracking-[0.5em] relative z-10">
+      <footer className="mt-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-[0.5em] relative z-10">
         © 2026 Ritik Shah — Portfolio_v2.sh
       </footer>
     </div>

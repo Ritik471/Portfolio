@@ -50,15 +50,26 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## Contact Form Setup (Resend)
+
+The contact form is powered by **Resend** and **Netlify Functions**. To make it work in production:
+
+1.  **Get an API Key**: Sign up at [resend.com](https://resend.com) and generate an API key.
+2.  **Netlify Configuration**:
+    *   Go to your Netlify Dashboard -> Site Settings -> Environment Variables.
+    *   Add a new variable: `RESEND_API_KEY` with your key as the value.
+3.  **Local Testing**:
+    *   Run `npx netlify dev` to test the email functionality locally.
+
 ## What technologies are used for this project?
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** & **TypeScript**
+- **React** & **Framer Motion**
+- **Tailwind CSS** & **shadcn/ui**
+- **Resend** (Email Infrastructure)
+- **Netlify Functions** (Serverless Backend)
 
 ## How can I deploy this project?
 

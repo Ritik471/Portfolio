@@ -20,14 +20,14 @@ const highlights = [
   {
     icon: Calendar,
     label: "Experience",
-    value: "3+ Years",
+    value: "1+ Year",
     color: "text-purple-400",
     bg: "group-hover:bg-purple-500/10",
   },
   {
     icon: Coffee,
     label: "Projects",
-    value: "25+ Live",
+    value: "10+ Live",
     color: "text-emerald-400",
     bg: "group-hover:bg-emerald-500/10",
   },
@@ -45,33 +45,33 @@ const skills = [
     category: "Frontend Architecture",
     icon: "logos:react",
     items: [
-      "React 19",
-      "Next.js 15",
+      "Next.js",
+      "React",
       "TypeScript",
       "Tailwind CSS",
-      "Framer Motion",
+      "Shadcn UI",
     ],
     accent: "group-hover:border-blue-500/50",
     glow: "bg-blue-500/5",
   },
   {
-    category: "Mobile Systems",
+    category: "Mobile Solutions",
     icon: "logos:flutter",
-    items: ["Flutter", "Android (Kotlin)", "React Native", "Dart"],
+    items: ["Flutter", "React Native", "Dart"],
     accent: "group-hover:border-emerald-500/50",
     glow: "bg-emerald-500/5",
   },
   {
-    category: "Engineering Tools",
-    icon: "logos:visual-studio-code",
-    items: ["Monorepos", "Git", "Docker", "Figma", "Appwrite"],
+    category: "Design & UX",
+    icon: "logos:figma",
+    items: ["Figma", "Wireframing", "Prototyping", "Responsive Layouts"],
     accent: "group-hover:border-purple-500/50",
     glow: "bg-purple-500/5",
   },
   {
     category: "Specialized",
     icon: "logos:google-search-console",
-    items: ["Technical SEO", "WordPress", "System Design", "UI/UX"],
+    items: ["Technical SEO", "WordPress", "PostgreSQL", "Git & GitHub"],
     accent: "group-hover:border-yellow-500/50",
     glow: "bg-yellow-500/5",
   },
@@ -247,7 +247,7 @@ const About = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#030303] text-white selection:bg-blue-500 selection:text-white pb-20 md:pb-28 overflow-x-hidden">
+    <div className="relative min-h-screen themed-bg themed-text selection:bg-blue-500 pb-20 md:pb-28 overflow-x-hidden">
       {/* Background Ambience */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
@@ -256,23 +256,23 @@ const About = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="relative z-10 px-4 md:px-6 pt-32 md:pt-32 pb-16 md:pb-20 border-b border-white/10">
-        <Reveal className="max-w-7xl mx-auto">
+      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-0 pt-32 md:pt-32 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <Reveal className="">
           <p className="font-mono text-[10px] text-blue-400 tracking-[0.3em] uppercase mb-8">
             // The Engineer
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-blue-400/50">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-blue-400/50">
               ENGINEER, BUILDER,
             </span>{" "}
             <br />
-            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-white/60 to-white/10 italic">
+            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
               LIFELONG LEARNER.
             </span>
           </h1>
 
-          <p className="max-w-2xl text-lg md:text-xl text-white/70 font-light leading-relaxed">
-            I am <span className="text-white font-medium">Ritik Shah</span>, a
+          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+            I am <span className="text-foreground font-medium">Ritik Shah</span>, a
             software engineer based in Nagpur specialized in building{" "}
             <span className="text-blue-400">performant web applications</span>,
             scalable monorepo architectures, and high-efficacy technical SEO
@@ -282,22 +282,23 @@ const About = () => {
       </section>
 
       {/* Highlights Grid */}
-      <section className="relative z-10 py-12 md:py-16 px-4 md:px-6 border-b border-white/10 bg-white/[0.01]">
+      <section className="relative z-10 py-12 md:py-16 px-6 lg:px-0 " style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {highlights.map((h, i) => {
             const IconComp = h.icon;
             return (
               <Reveal key={h.label} delay={i * 0.1}>
                 <div
-                  className={`p-6 md:p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-2xl md:rounded-3xl group hover:border-white/30 transition-all ${h.bg}`}
+                  className={`p-6 md:p-8 border backdrop-blur-md rounded-2xl md:rounded-3xl group transition-all ${h.bg}`}
+                  style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}
                 >
                   <IconComp
                     className={`w-5 h-5 mb-4 group-hover:scale-110 transition-all ${h.color}`}
                   />
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-white/40 mb-1">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
                     {h.label}
                   </p>
-                  <p className="text-lg md:text-xl font-semibold tracking-tight text-white/90 group-hover:text-white transition-colors">
+                  <p className="text-lg md:text-xl font-semibold tracking-tight text-foreground/90 group-hover:text-foreground transition-colors">
                     {h.value}
                   </p>
                 </div>
@@ -308,37 +309,36 @@ const About = () => {
       </section>
 
       {/* Narrative & Live Widgets */}
-      <section className="relative z-10 py-16 md:py-24 px-4 md:px-6">
+      <section className="relative max-w-7xl mx-auto z-10 py-16 md:py-24 px-6 lg:px-0 border-t " style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         {/* items-stretch ensures the total height of both columns is identical */}
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
+        <div className=" grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
           {/* LEFT COLUMN: Narrative Bio */}
           <Reveal className="h-full">
-            <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-white/60 font-light leading-relaxed h-full flex flex-col justify-center">
+            <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-muted-foreground font-light leading-relaxed h-full flex flex-col justify-center">
               <p>
-                I'm <span className="text-white font-medium">Ritik Shah</span>,
+                I'm <span className="text-foreground font-medium">Ritik Shah</span>,
                 a software engineer with a deep passion for building scalable
                 systems that bridge the gap between technical excellence and
                 thoughtful design. Based in
-                <span className="text-blue-400 font-normal"> Nagpur</span>, I've
-                spent the last few years mastering the modern web stack.
+                <span className="text-blue-400 font-normal"> Nagpur</span>, I focus on crafting 
+                high-performance, SEO-friendly digital platforms.
               </p>
               <p>
                 I specialize in{" "}
-                <span className="text-white font-medium border-b border-blue-500/30">
-                  Frontend Architecture
+                <span className="text-foreground font-medium border-b border-blue-500/30">
+                  Frontend Engineering
                 </span>
-                , specifically focusing on the React/Next.js ecosystem. I build
-                with a{" "}
-                <span className="text-emerald-400/80">"Performance-First"</span>{" "}
-                mindset.
+                , with strong expertise in the Next.js and React ecosystem. My approach 
+                is defined by a <span className="text-green-400/90">"User-First"</span> philosophy 
+                integrated with technical SEO best practices.
               </p>
               <p>
-                My experience spans across technical SEO for international firms
-                and crafting pixel-perfect UIs for high-growth startups. I
-                believe great software is about creating
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 italic font-medium ml-1">
-                  delightful digital experiences.
+                My experience spans across delivering international AI projects, 
+                designing intuitive UIs, and building cross-platform mobile solutions. 
+                I believe great software is about creating
+                <span className="text-transparent bg-clip-text  bg-gradient-to-r from-purple-400 to-blue-400 italic font-medium ml-1">
+                  intuitive and functional digital experiences.
                 </span>
               </p>
             </div>
@@ -374,21 +374,21 @@ const About = () => {
 
                   <div className="flex-1 min-w-0 flex flex-col justify-center h-full pt-2">
                     <a href={track.link} target="_blank" rel="noreferrer" className="group/link block">
-                      <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-2 truncate group-hover/link:text-[#1DB954] transition-colors">
+                      <p className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2 truncate group-hover/link:text-[#1DB954] transition-colors">
                         {track.title || "Offline"}
                       </p>
                     </a>
-                    <p className="text-sm md:text-base text-white/50 truncate font-light">
+                    <p className="text-sm md:text-base text-muted-foreground truncate font-light">
                       {track.title ? track.artist : "Syncing Spotify..."}
                     </p>
 
                     {isPlaying && (
                       <div className="w-full mt-4 animate-in fade-in duration-500">
-                        <div className="flex justify-between text-[10px] font-mono text-white/40 mb-2">
+                        <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-2">
                           <span>{formatTime(progressMs)}</span>
                           <span>{formatTime(track.durationMs)}</span>
                         </div>
-                        <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: 'rgba(var(--surface),0.1)' }}>
                           <motion.div
                             animate={{ width: `${(progressMs / track.durationMs) * 100}%` }}
                             transition={{ duration: 1, ease: "linear" }}
@@ -409,8 +409,8 @@ const About = () => {
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
                   <div className="flex items-center gap-3">
-                    <Icon icon="simple-icons:wakatime" className="text-2xl text-white/80" />
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-white/40">
+                    <Icon icon="simple-icons:wakatime" className="text-2xl text-foreground/80" />
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                       WakaTime / 7 Days
                     </p>
                   </div>
@@ -420,11 +420,11 @@ const About = () => {
                 </div>
 
                 <div className="relative z-10">
-                  <p className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6 group-hover:text-purple-100 transition-colors">
+                  <p className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-6 group-hover:text-purple-300 transition-colors">
                     {wakaTotalTime}
                   </p>
 
-                  <div className="flex w-full h-2 rounded-full overflow-hidden gap-0.5 mb-6 bg-white/10">
+                  <div className="flex w-full h-2 rounded-full overflow-hidden gap-0.5 mb-6" style={{ background: 'rgba(var(--surface),0.1)' }}>
                     {wakaData.map(lang => (
                       <motion.div
                         initial={{ width: 0 }}
@@ -445,8 +445,8 @@ const About = () => {
                     {wakaData.map(lang => (
                       <div key={lang.name} className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full shadow-lg" style={{ backgroundColor: lang.color }} />
-                        <span className="text-xs text-white/60 font-mono uppercase group-hover:text-white/80 transition-colors">
-                          {lang.name} <span className="text-white/60">({lang.percent.toFixed(1)}%)</span>
+                        <span className="text-xs text-muted-foreground font-mono uppercase group-hover:text-foreground/80 transition-colors">
+                          {lang.name} <span className="text-muted-foreground">({lang.percent.toFixed(1)}%)</span>
                         </span>
                       </div>
                     ))}
@@ -459,10 +459,10 @@ const About = () => {
       </section>
 
       {/* Expertise Section */}
-      <section className="relative z-10 py-16 md:py-24 px-4 md:px-6 border-t border-white/10 bg-white/[0.01]">
-        <Reveal className="max-w-7xl mx-auto mb-16 text-left lg:text-left">
+      <section className="relative z-10 py-16 md:py-24 px-6 lg:px-0 max-w-7xl mx-auto border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
+        <Reveal className=" mb-16 text-left lg:text-left">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4">
-            Technical <span className="text-white/40 italic">Expertise.</span>
+            Technical <span className="text-muted-foreground italic">Expertise.</span>
           </h2>
           <p className="text-blue-400 font-mono text-xs md:text-sm tracking-widest uppercase">
             // Industry standard toolsets
@@ -473,7 +473,8 @@ const About = () => {
           {skills.map((group, i) => (
             <Reveal key={group.category} delay={i * 0.1}>
               <div
-                className={`p-8 border border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2rem] h-full transition-all group relative overflow-hidden ${group.accent}`}
+                className={`p-8 border backdrop-blur-md rounded-[2rem] h-full transition-all group relative overflow-hidden ${group.accent}`}
+                style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}
               >
                 <div
                   className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${group.glow}`}
@@ -483,18 +484,19 @@ const About = () => {
                     icon={group.icon}
                     className="text-3xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                   />
-                  <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
                     Expertise_{i + 1}
                   </span>
                 </div>
-                <p className="text-lg font-semibold mb-6 tracking-tight relative z-10 text-white/90 group-hover:text-white uppercase transition-colors">
+                <p className="text-lg font-semibold mb-6 tracking-tight relative z-10 text-foreground/90 group-hover:text-foreground uppercase transition-colors">
                   {group.category}
                 </p>
                 <div className="flex flex-wrap gap-2 relative z-10">
                   {group.items.map((skill) => (
                     <span
                       key={skill}
-                      className="font-mono text-[10px] px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-white/60 group-hover:text-white/90 transition-all"
+                      className="font-mono text-[10px] px-3 py-1.5 rounded-lg border text-muted-foreground group-hover:text-foreground/90 transition-all"
+                      style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.05)' }}
                     >
                       {skill}
                     </span>
@@ -506,7 +508,7 @@ const About = () => {
         </div>
       </section>
 
-      <footer className="mt-20 text-center text-[10px] font-mono text-white/30 uppercase tracking-[0.5em] relative z-10">
+      <footer className="mt-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-[0.5em] relative z-10">
         © 2026 Ritik Shah — Built with Precision
       </footer>
     </div>

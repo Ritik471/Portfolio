@@ -15,6 +15,7 @@ import {
 import Reveal from "../components/Reveal";
 import { Link } from "react-router-dom";
 import { GitHubCalendar } from "react-github-calendar";
+import { useTheme } from "../hooks/useTheme";
 
 const techStack = [
   {
@@ -96,32 +97,32 @@ const services = [
     title: "Frontend Engineering",
     desc: "Architecting sub-second TTI interfaces with React and Next.js server components.",
     icon: <Monitor className="w-6 h-6" />,
-    accent: "text-blue-400",
-    hoverBorder: "hover:border-blue-400/50",
+    accent: "!text-blue-400",
+    hoverBorder: "hover:!border-blue-400",
     glow: "bg-blue-800",
   },
   {
     title: "Mobile Solutions",
     desc: "Cross-platform mastery using Flutter for native-performance apps.",
     icon: <Smartphone className="w-6 h-6" />,
-    accent: "text-emerald-400",
-    hoverBorder: "hover:border-emerald-400/50",
+    accent: "!text-emerald-400",
+    hoverBorder: "hover:!border-emerald-400/50",
     glow: "bg-emerald-800",
   },
   {
     title: "SEO Architecture",
     desc: "Technical SEO integration with JSON-LD and semantic HTML for global search dominance.",
     icon: <Search className="w-6 h-6" />,
-    accent: "text-yellow-400",
-    hoverBorder: "hover:border-yellow-400/50",
+    accent: "!text-yellow-400",
+    hoverBorder: "hover:!border-yellow-400/50",
     glow: "bg-yellow-800",
   },
   {
     title: "System Design",
     desc: "Building scalable monorepo structures and type-safe backend integrations.",
     icon: <Cpu className="w-6 h-6" />,
-    accent: "text-purple-400",
-    hoverBorder: "hover:border-purple-400/50",
+    accent: "!text-purple-400",
+    hoverBorder: "hover:!border-purple-400/50",
     glow: "bg-purple-800",
   },
 ];
@@ -159,6 +160,7 @@ interface GitHubData {
 }
 
 const Index = () => {
+  const { resolvedTheme } = useTheme();
   const [data, setData] = useState<GitHubData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeCommand, setActiveCommand] = useState(0);
@@ -292,10 +294,10 @@ const Index = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#030303] text-white selection:bg-blue-500 selection:text-white overflow-x-hidden">
+    <div className="relative min-h-screen themed-bg themed-text selection:bg-blue-500 overflow-x-hidden">
       {/* Interactive Cursor Glow */}
       <motion.div
-        className="pointer-events-none fixed inset-0 z-50 w-8 h-8 rounded-full bg-blue-500/20 blur-xl mix-blend-screen"
+        className="pointer-events-none fixed inset-0 z-50 w-8 h-8 rounded-full bg-blue-500/60 dark:bg-blue-500/40 blur-xl mix-blend-multiply dark:mix-blend-screen transition-colors duration-300"
         style={{
           x: cursorX,
           y: cursorY,
@@ -312,12 +314,12 @@ const Index = () => {
 
       <section className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <Reveal>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 border border-white/10 rounded-full bg-white/5 backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 border rounded-full backdrop-blur-md" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.05)' }}>
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/90">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em]" style={{ color: 'rgba(var(--surface),0.9)' }}>
               Nagpur, IN — Systems Online
             </span>
           </div>
@@ -329,11 +331,11 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-blue-400/80">
+          <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-blue-400/80">
             ENGINEER
           </span>{" "}
           <br />
-          <span className="inline-block py-2 px-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 italic">
+          <span className="inline-block py-2 px-4 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
             BY DESIGN
           </span>
         </motion.h1>
@@ -342,13 +344,13 @@ const Index = () => {
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
               <Code2 className="w-4 h-4 text-blue-400" />
-              <span className="font-mono text-xs uppercase tracking-widest text-blue-100/90">
+              <span className="font-mono text-xs uppercase tracking-widest text-blue-500 dark:text-blue-300">
                 Frontend Architect
               </span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-2xl border border-purple-500/20 backdrop-blur-sm">
               <Cpu className="w-4 h-4 text-purple-400" />
-              <span className="font-mono text-xs uppercase tracking-widest text-purple-100/90">
+              <span className="font-mono text-xs uppercase tracking-widest text-purple-500 dark:text-purple-300">
                 Software Engineer
               </span>
             </div>
@@ -356,13 +358,13 @@ const Index = () => {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-white/70 mb-12 font-light leading-relaxed">
-            I am <span className="text-white font-medium">Ritik Shah</span>. I
-            specialize in crafting{" "}
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-12 font-light leading-relaxed">
+            I am <span className="text-foreground font-medium">Ritik Shah</span>. I
+            specialize in building{" "}
             <span className="text-blue-400 font-normal">
-              high-fidelity frontends
+              high-performance landing pages
             </span>{" "}
-            and robust full-stack architectures.
+            and scalable web applications with a focus on SEO and UI/UX.
           </p>
         </Reveal>
 
@@ -370,7 +372,7 @@ const Index = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               to="/projects"
-              className="w-64 py-4 bg-white text-black font-bold rounded-full hover:bg-blue-50 transition-all flex items-center justify-center gap-2 group shadow-xl"
+              className="w-64 py-4 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-xl"
             >
               Explore Projects
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -378,9 +380,10 @@ const Index = () => {
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <a
-              href="/cv.pdf"
-              download
-              className="w-64 py-4 border border-white/20 rounded-full hover:border-blue-500/50 hover:bg-white/5 transition-all text-white/90 backdrop-blur-sm flex items-center justify-center gap-2 group"
+              href="https://drive.google.com/uc?export=download&id=179Ei5NVWUCZh7AaqEiTP0d8i8eYyyVxz"
+              rel="noopener noreferrer"
+              className="w-64 py-4 border rounded-full hover:border-blue-500/50 transition-all text-foreground/90 backdrop-blur-sm flex items-center justify-center gap-2 group"
+              style={{ borderColor: 'rgba(var(--surface),0.2)' }}
             >
               <FileText className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
               Download CV
@@ -394,7 +397,7 @@ const Index = () => {
           transition={{ delay: 1.5, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40">
+          <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
             Scroll
           </span>
           <motion.div
@@ -406,14 +409,14 @@ const Index = () => {
         </motion.div>
       </section>
 
-      <section className="relative z-10 flex flex-col justify-center min-h-screen px-6 max-w-7xl mx-auto border-t border-white/5 py-20 md:py-32">
+      <section className="relative z-10 flex flex-col justify-center min-h-screen px-6 max-w-7xl mx-auto border-t py-20 md:py-32" style={{ borderColor: 'rgba(var(--surface),0.05)' }}>
         <Reveal className="mb-16">
           <p className="text-blue-400 font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
             // WHAT I DELIVER
           </p>
           <h1 className="text-5xl sm:text-8xl font-bold tracking-tighter leading-[1.0] mb-8 uppercase">
             Engineering <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/5 italic">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground to-muted-foreground italic">
               Specialties.
             </span>
           </h1>
@@ -428,23 +431,25 @@ const Index = () => {
                 className="group relative h-full rounded-[2rem] cursor-pointer"
               >
                 <div
-                  className={`relative h-full p-8 rounded-[2rem] bg-white/[0.03] backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 ${service.hoverBorder}`}
+                  className={`relative h-full p-8 rounded-[2rem] backdrop-blur-xl border overflow-hidden transition-all duration-500 ${service.hoverBorder}`}
+                  style={{ background: 'rgba(var(--surface),0.03)', borderColor: 'rgba(var(--surface),0.1)' }}
                 >
                   <div
                     className={`absolute -top-24 -right-24 w-48 h-48 blur-[80px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-500 ${service.glow}`}
                   />
                   <div
-                    className={`mb-6 w-14 h-14 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/40 transition-all duration-300 ${service.accent} group-hover:scale-110 group-hover:bg-white/5`}
+                    className={`mb-6 w-14 h-14 flex items-center justify-center rounded-xl border text-muted-foreground transition-all duration-300 ${service.accent} group-hover:scale-110`}
+                    style={{ background: 'rgba(var(--surface),0.05)', borderColor: 'rgba(var(--surface),0.1)' }}
                   >
                     {service.icon}
                   </div>
-                  <h3 className="text-lg font-bold mb-3 tracking-tight text-white/90 transition-colors duration-300 group-hover:text-white uppercase">
+                  <h3 className="text-lg font-bold mb-3 tracking-tight text-foreground/90 transition-colors duration-300 group-hover:text-foreground uppercase">
                     {service.title}
                   </h3>
                   <div
                     className={`w-12 h-[2px] mb-4 transition-all duration-500 group-hover:w-full ${service.glow}`}
                   />
-                  <p className="text-sm text-white/50 leading-relaxed font-light transition-colors duration-300 group-hover:text-white/80">
+                  <p className="text-sm text-muted-foreground leading-relaxed font-light transition-colors duration-300 group-hover:text-foreground/80">
                     {service.desc}
                   </p>
                 </div>
@@ -454,14 +459,14 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="relative z-10 flex flex-col justify-center min-h-screen px-6 max-w-7xl mx-auto border-t border-white/10 py-20 md:py-32">
+      <section className="relative z-10 flex flex-col justify-center min-h-screen px-6 max-w-7xl mx-auto border-t py-20 md:py-32" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         <Reveal className="mb-16">
           <p className="text-purple-400 font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
             // MY PHILOSOPHY
           </p>
           <h2 className="text-5xl sm:text-8xl font-bold tracking-tighter leading-[1.0] mb-8 uppercase">
             Core <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/10 italic">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground to-muted-foreground italic">
               Principles.
             </span>
           </h2>
@@ -472,14 +477,16 @@ const Index = () => {
               <motion.div
                 whileHover={{ y: -10, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="group relative p-8 md:p-10 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] md:rounded-[2.5rem] hover:border-white/30 transition-all duration-500 overflow-hidden h-full backdrop-blur-sm"
+                className="group relative p-8 md:p-10 border cursor-pointer rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 overflow-hidden h-full backdrop-blur-sm"
+                style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}
               >
                 <div
                   className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${p.glow}`}
                 />
                 <Icon
                   icon={p.icon}
-                  className="text-4xl mb-6 md:mb-8 text-white/30 group-hover:text-white transition-all duration-500 relative z-10"
+
+                  className="text-4xl mb-6 md:mb-8 text-muted-foreground group-hover:text-foreground transition-all duration-500 relative z-10"
                 />
                 <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block mb-4 relative z-10">
                   {p.tag}
@@ -487,7 +494,7 @@ const Index = () => {
                 <h3 className="text-xl md:text-2xl font-semibold mb-4 tracking-tight uppercase relative z-10 group-hover:translate-x-1 transition-transform">
                   {p.title}
                 </h3>
-                <p className="text-white/60 text-sm md:text-base leading-relaxed group-hover:text-white/80 transition-colors duration-500 font-light relative z-10">
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed group-hover:text-foreground/80 transition-colors duration-500 font-light relative z-10">
                   {p.desc}
                 </p>
               </motion.div>
@@ -496,15 +503,15 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="relative z-10 flex flex-col justify-center min-h-screen px-6 bg-white/[0.01] border-y border-white/10 py-20 md:py-32">
-        <div className="max-w-7xl mx-auto w-full">
+      <section className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center min-h-screen px-6 border-t py-20 md:py-32" style={{ background: 'rgba(var(--surface),0.01)', borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div>
           <Reveal className="mb-16 text-left">
             <p className="text-emerald-400 font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
               // TECHNICAL STACK
             </p>
-            <h2 className="text-5xl sm:text-8xl font-bold tracking-tighter leading-[1.0] mb-8 uppercase">
+            <h2 className="text-5xl sm:text-8xl font-bold sm:max-w-xs tracking-tighter leading-[1.0] mb-8 uppercase">
               The{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/60 to-white/10 italic">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground to-muted-foreground italic">
                 Arsenal.
               </span>
             </h2>
@@ -516,13 +523,14 @@ const Index = () => {
                   whileHover={{ y: -5, scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`p-8 border border-white/10 bg-white/[0.02] cursor-pointer backdrop-blur-md rounded-[2rem] flex flex-col items-center gap-4 group transition-all duration-500 ${tech.border} ${tech.color} hover:bg-white/[0.05]`}
+                  className={`p-8 border cursor-pointer backdrop-blur-md rounded-[2rem] flex flex-col items-center gap-4 group transition-all duration-500 ${tech.border} ${tech.color}`}
+                  style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.02)' }}
                 >
                   <Icon
                     icon={tech.icon}
                     className="text-5xl md:text-6xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                   />
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">
                     {tech.name}
                   </span>
                 </motion.div>
@@ -532,14 +540,14 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="relative z-10 flex flex-col justify-center min-h-screen px-4 md:px-6 max-w-7xl mx-auto border-t border-white/10 py-20 md:py-32">
+      <section className="relative z-10 flex flex-col justify-center min-h-screen px-4 md:px-6 max-w-7xl mx-auto border-t py-20 md:py-32" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         <Reveal className="mb-16">
           <p className="text-yellow-400 font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
             // OPEN SOURCE JOURNEY
           </p>
           <h2 className="text-5xl sm:text-8xl font-bold tracking-tighter leading-[1.0] mb-8 uppercase">
             GitHub <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/60 to-white/10 italic">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground to-muted-foreground italic">
               Activity.
             </span>
           </h2>
@@ -551,18 +559,19 @@ const Index = () => {
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="p-8 border border-white/10 bg-white/[0.03] cursor-pointer rounded-[2rem] text-center group hover:border-white/30 transition-all backdrop-blur-sm"
+                className="p-8 border cursor-pointer rounded-[2rem] text-center group transition-all backdrop-blur-sm"
+                style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}
               >
                 <Icon
                   icon={stat.icon}
-                  className={`mx-auto text-2xl mb-4 text-white/30 group-hover:scale-110 transition-all ${stat.text}`}
+                  className={`mx-auto text-2xl mb-4 text-muted-foreground group-hover:scale-110 transition-all ${stat.text}`}
                 />
                 <div
                   className={`text-3xl md:text-5xl font-bold mb-2 tracking-tighter ${stat.text}`}
                 >
                   {loading ? "..." : stat.value}
                 </div>
-                <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-mono">
                   {stat.label}
                 </div>
               </motion.div>
@@ -571,16 +580,17 @@ const Index = () => {
         </div>
 
         <Reveal delay={0.4} className="max-w-[950px] mx-auto w-full mb-12">
-          <div className="rounded-[2.5rem] p-10 border border-white/10 bg-white/[0.03] backdrop-blur-md overflow-x-auto overflow-y-hidden text-sm">
-            <p className="font-mono text-sm text-white/60 mb-8 uppercase tracking-widest text-center">
+          <div className="rounded-[2.5rem] p-10 border backdrop-blur-md overflow-x-auto overflow-y-hidden text-sm" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}>
+            <p className="font-mono text-sm text-muted-foreground mb-8 uppercase tracking-widest text-center">
               Contribution Heatmap
             </p>
             <div className="flex justify-center min-w-[750px] md:min-w-fit">
               <GitHubCalendar
                 username="Ritik471"
-                colorScheme="dark"
+                colorScheme={resolvedTheme}
                 theme={{
-                  dark: ['#1e1e24', '#042d17', '#034a26', '#036531', '#01833c'] // Custom Hacker/Emerald mapping
+                  dark: ['#1e1e24', '#042d17', '#034a26', '#036531', '#01833c'],
+                  light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39']
                 }}
                 fontSize={12}
                 blockSize={12}
@@ -592,11 +602,11 @@ const Index = () => {
         </Reveal>
 
         <Reveal delay={0.5} className="max-w-[950px] mx-auto w-full">
-          <div className="rounded-[2.5rem] p-10 border border-white/10 cursor-pointer bg-white/[0.03] backdrop-blur-md">
-            <p className="font-mono text-sm text-white/60 mb-8 uppercase tracking-widest text-center">
+          <div className="rounded-[2.5rem] p-10 border cursor-pointer backdrop-blur-md" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.03)' }}>
+            <p className="font-mono text-sm text-muted-foreground mb-8 uppercase tracking-widest text-center">
               Top Languages Frequency
             </p>
-            <div className="flex w-full h-3 rounded-full overflow-hidden gap-1 mb-10 bg-white/10">
+            <div className="flex w-full h-3 rounded-full overflow-hidden gap-1 mb-10" style={{ background: 'rgba(var(--surface),0.1)' }}>
               {data?.languages.map((lang) => (
                 <div
                   key={lang.name}
@@ -611,9 +621,9 @@ const Index = () => {
                   <div
                     className={`w-3 h-3 rounded-full ${lang.color} shadow-lg`}
                   />
-                  <span className="font-mono text-sm text-white/70">
+                  <span className="font-mono text-sm text-foreground/70">
                     {lang.name}{" "}
-                    <span className="text-white/30 ml-1">{lang.pct}%</span>
+                    <span className="text-muted-foreground ml-1">{lang.pct}%</span>
                   </span>
                 </div>
               ))}
@@ -622,14 +632,14 @@ const Index = () => {
         </Reveal>
       </section>
 
-      <footer className="relative z-10 flex flex-col justify-center min-h-screen px-6 text-center border-t border-white/10">
+      <footer className="relative z-10 max-w-7xl mx-auto flex flex-col justify-center min-h-screen px-6 text-center border-t" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         <Reveal>
           <p className="text-blue-400 font-mono text-[10px] uppercase tracking-[0.4em] mb-6">
             // CONNECT MATRIX
           </p>
           <h2 className="text-7xl sm:text-9xl font-bold tracking-tighter leading-none mb-12 uppercase">
             Ready to <br />
-            <span className="relative inline-block pb-2 px-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 italic">
+            <span className="relative inline-block pb-2 px-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 italic">
               Scale?
             </span>
           </h2>
@@ -641,13 +651,13 @@ const Index = () => {
               <span className="hover:text-blue-400 transition-colors">
                 Initiate Collaboration
               </span>
-              <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+              <div className="w-16 h-16 rounded-full border flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all group-hover:scale-110" style={{ borderColor: 'rgba(var(--surface),0.2)' }}>
                 <ArrowRight className="w-6 h-6" />
               </div>
             </Link>
           </motion.div>
         </Reveal>
-        <div className="mt-20 text-center text-[10px] font-mono text-white/30 uppercase tracking-[0.5em] relative z-10">
+        <div className="mt-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-[0.5em] relative z-10">
           © 2026 Ritik Shah — All Rights Reserved
         </div>
       </footer>
