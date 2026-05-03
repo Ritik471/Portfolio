@@ -12,16 +12,21 @@ import Experience from "./pages/Experience";
 import Certificates from "./pages/Certificates";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
+import useGoogleAnalytics from "./hooks/useGoogleAnalytics";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useGoogleAnalytics("G-T8Y5800CFZ");
+  return (
   <ThemeProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Layout>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -38,5 +43,6 @@ const App = () => (
     </QueryClientProvider>
   </ThemeProvider>
 );
+};
 
 export default App;

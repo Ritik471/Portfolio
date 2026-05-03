@@ -26,11 +26,7 @@ const navItems = [
   { label: "Contact", path: "/contact", icon: Mail },
 ];
 
-const mobileThemeModes = [
-  { value: "light" as const, icon: Sun, label: "Light" },
-  { value: "dark" as const, icon: Moon, label: "Dark" },
-  { value: "system" as const, icon: Monitor, label: "Auto" },
-];
+
 
 const Sidebar = () => {
   const location = useLocation();
@@ -114,10 +110,10 @@ const Sidebar = () => {
       </motion.aside>
 
       {/* Mobile Header */}
-      <div className="fixed top-6 left-6 right-6 z-50 flex justify-between items-center lg:hidden">
+      <div className="fixed top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 z-50 flex justify-between items-center lg:hidden">
         <Link
           to="/"
-          className="w-16 h-16 glass-strong rounded-xl flex items-center justify-center backdrop-blur-md"
+          className="w-14 h-14 sm:w-16 sm:h-16 glass-strong rounded-xl flex items-center justify-center backdrop-blur-md"
         >
           <img
             src="/assets/images/sidelogo.jpg"
@@ -126,16 +122,38 @@ const Sidebar = () => {
           />
         </Link>
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="glass-strong rounded-xl p-4 shadow-xl backdrop-blur-md"
-        >
-          {mobileOpen ? (
-            <X className="w-6 h-6 text-foreground" />
-          ) : (
-            <Menu className="w-6 h-6 text-foreground" />
-          )}
-        </button>
+        <div className="flex gap-2 sm:gap-3">
+          {/* Mobile Theme Toggle Button */}
+          <button
+            onClick={() => {
+              const modes: ("light" | "dark" | "system")[] = ["light", "dark", "system"];
+              const currentIndex = modes.indexOf(theme);
+              const nextIndex = (currentIndex + 1) % modes.length;
+              setTheme(modes[nextIndex]);
+            }}
+            className="glass-strong rounded-xl p-3 sm:p-4 shadow-xl backdrop-blur-md text-foreground transition-transform active:scale-95"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? (
+              <Sun className="w-6 h-6" />
+            ) : theme === "dark" ? (
+              <Moon className="w-6 h-6" />
+            ) : (
+              <Monitor className="w-6 h-6" />
+            )}
+          </button>
+
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="glass-strong rounded-xl p-3 sm:p-4 shadow-xl backdrop-blur-md"
+          >
+            {mobileOpen ? (
+              <X className="w-6 h-6 text-foreground" />
+            ) : (
+              <Menu className="w-6 h-6 text-foreground" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -157,28 +175,18 @@ const Sidebar = () => {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute bottom-0 left-0 right-0 border-t rounded-t-[2.5rem] p-8 pb-12 shadow-2xl"
+              className="absolute bottom-0 left-0 right-0 border-t rounded-t-[2.5rem] p-6 pb-10 shadow-2xl"
               style={{
                 background: resolvedTheme === "dark" ? "#0A0A0A" : "#ffffff",
                 borderColor: "rgba(var(--surface), 0.20)",
               }}
             >
               <div
-                className="w-12 h-1.5 rounded-full mx-auto mb-8"
+                className="w-12 h-1.5 rounded-full mx-auto mb-6"
                 style={{ background: "rgba(var(--surface), 0.20)" }}
               />
 
-              {/* Logo in Mobile Menu */}
-              <div className="flex flex-col items-center mb-8">
-                <img
-                  src="/assets/images/sidelogo.jpg"
-                  alt="Logo"
-                  className="w-16 h-16 mb-2 brightness-125"
-                />
-                <span className="font-bold text-foreground tracking-widest uppercase text-xs">
-                  Ritik Shah
-                </span>
-              </div>
+
 
               <div className="flex flex-col gap-3">
                 {navItems.map((item) => {
@@ -211,37 +219,7 @@ const Sidebar = () => {
                 })}
               </div>
 
-              {/* Mobile Theme Toggle */}
-              <div
-                className="mt-6 pt-6 border-t flex items-center justify-center gap-2"
-                style={{ borderColor: "rgba(var(--surface), 0.20)" }}
-              >
-                {mobileThemeModes.map((mode) => {
-                  const Icon = mode.icon;
-                  const isActive = theme === mode.value;
-                  return (
-                    <button
-                      key={mode.value}
-                      onClick={() => setTheme(mode.value)}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all ${isActive
-                        ? "text-foreground"
-                        : "text-muted-foreground"
-                        }`}
-                      style={
-                        isActive
-                          ? {
-                            background: "rgba(var(--surface), 0.10)",
-                            border: "1px solid rgba(var(--surface), 0.15)",
-                          }
-                          : { border: "1px solid transparent" }
-                      }
-                    >
-                      <Icon className="w-4 h-4" />
-                      {mode.label}
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Mobile theme toggle moved to header for better accessibility and compact menu */}
             </motion.div>
           </motion.div>
         )}

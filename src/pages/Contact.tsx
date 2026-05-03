@@ -3,6 +3,7 @@ import { Send, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
+import usePageTitle from "../hooks/usePageTitle";
 
 import { toast } from "sonner";
 
@@ -34,6 +35,7 @@ const socials = [
 ];
 
 const Contact = () => {
+  usePageTitle("Initiate Connection");
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [formData, setFormData] = useState({
@@ -92,30 +94,31 @@ const Contact = () => {
         <div className="absolute bottom-[-10%] -right-[10%] w-[60%] h-[60%] bg-cyan-600/5 blur-[140px] rounded-full" />
       </div>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-0 pt-32 md:pt-32 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
-        <Reveal>
-          <p className="font-mono text-[10px] text-emerald-400 tracking-[0.3em] uppercase mb-8">
-            // Establish_Uplink
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-emerald-400/50">
-              INITIATE
-            </span>{" "}
-            <br />
-            {/* Added py-2 to fix italic clipping */}
-            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
-              CONNECTION.
-            </span>
-          </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-            Ready to scale your next project? Drop a message below to start the
-            <span className="text-emerald-400 font-normal">
-              {" "}
-              engineering dialogue
-            </span>
-            .
-          </p>
-        </Reveal>
+      <section className="relative z-10 max-w-[1400px] mx-auto pt-32 sm:pt-40 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
+          <Reveal>
+            <p className="font-mono text-[9px] sm:text-[10px] text-emerald-400 tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-6 md:mb-8">
+              // Establish_Uplink
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold tracking-tighter leading-[1.0] sm:leading-[0.85] mb-8 uppercase">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-emerald-400/50">
+                INITIATE
+              </span>{" "}
+              <br />
+              <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
+                CONNECTION.
+              </span>
+            </h1>
+            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+              Ready to scale your next project? Drop a message below to start the
+              <span className="text-emerald-400 font-normal">
+                {" "}
+                engineering dialogue
+              </span>
+              .
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <section className="relative z-10 py-12 md:py-24 px-4 md:px-6">

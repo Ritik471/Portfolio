@@ -3,6 +3,7 @@ import { X, ExternalLink, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
+import usePageTitle from "../hooks/usePageTitle";
 
 const certificates = [
   {
@@ -47,6 +48,7 @@ const certificates = [
 ];
 
 const Certificates = () => {
+  usePageTitle("Certified Excellence");
   const [selected, setSelected] = useState<number | null>(null);
 
   return (
@@ -57,26 +59,28 @@ const Certificates = () => {
         <div className="absolute top-[20%] -left-[10%] w-[50%] h-[50%] bg-orange-600/5 blur-[140px] rounded-full" />
       </div>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-0 pt-32 md:pt-32 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
-        <Reveal className="max-w-7xl mx-auto">
-          <p className="font-mono text-[10px] text-amber-500 tracking-[0.3em] uppercase mb-6 md:mb-8">
-            // Verified_Credentials
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-amber-400/50">
-              CERTIFIED
-            </span>{" "}
-            <br />
-            <span className="inline-block py-1 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
-              EXCELLENCE.
-            </span>
-          </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-            Industry-recognized certifications that validate my expertise across
-            <span className="text-amber-400/80"> cloud platforms</span>,
-            frontend systems, and infrastructure.
-          </p>
-        </Reveal>
+      <section className="relative z-10 max-w-[1400px] mx-auto pt-32 sm:pt-40 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
+          <Reveal className="max-w-7xl mx-auto">
+            <p className="font-mono text-[9px] sm:text-[10px] text-amber-500 tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-6 md:mb-8">
+              // Verified_Credentials
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold tracking-tighter leading-[1.0] sm:leading-[0.85] mb-8 uppercase">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-amber-400/50">
+                CERTIFIED
+              </span>{" "}
+              <br />
+              <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
+                EXCELLENCE.
+              </span>
+            </h1>
+            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+              Industry-recognized certifications that validate my expertise across
+              <span className="text-amber-400/80"> cloud platforms</span>,
+              frontend systems, and infrastructure.
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <section className="relative z-10 py-24 px-6">
@@ -143,14 +147,14 @@ const Certificates = () => {
         </div>
 
         <Reveal delay={0.4}>
-          <div className="max-w-7xl mx-auto p-12 border rounded-[3rem] text-center relative overflow-hidden group" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.02)' }}>
+          <div className="max-w-7xl mx-auto p-8 sm:p-12 border rounded-[2rem] sm:rounded-[3rem] text-center relative overflow-hidden group" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.02)' }}>
 
             {/* Fixed: added pointer-events-none */}
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-blue-500/5 via-amber-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
             <Icon icon="line-md:linkedin" className="text-5xl text-blue-400 mb-6 mx-auto group-hover:scale-110 transition-transform duration-500" />
 
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4 uppercase">
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tighter mb-4 uppercase">
               Looking for more <span className="text-muted-foreground italic">Credentials?</span>
             </h2>
 
@@ -162,7 +166,7 @@ const Certificates = () => {
               href="https://www.linkedin.com/in/ritikshah2000/details/certifications/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative z-10 inline-flex items-center gap-3 px-12 py-5 bg-[#0077B5] text-white rounded-full font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#005a8a] transition-all shadow-2xl hover:scale-105 active:scale-95"
+              className="relative z-10 inline-flex items-center gap-3 px-8 sm:px-12 py-4 sm:py-5 bg-[#0077B5] text-white rounded-full font-bold text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-[#005a8a] transition-all shadow-2xl hover:scale-105 active:scale-95"
             >
               <Icon icon="line-md:external-link" className="w-4 h-4" /> View All on LinkedIn
             </a>
@@ -184,19 +188,19 @@ const Certificates = () => {
               initial={{ scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 20, opacity: 0 }}
-              className="relative border bg-background rounded-[2.5rem] md:rounded-[3rem] max-w-5xl w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden grid lg:grid-cols-2"
+              className="relative border bg-background rounded-[2.5rem] md:rounded-[3rem] max-w-5xl w-full max-h-[90vh] overflow-y-auto lg:overflow-hidden grid lg:grid-cols-2 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
               style={{ borderColor: 'rgba(var(--surface),0.2)' }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-6 right-6 md:top-8 md:right-8 z-20 p-3 md:p-4 border rounded-full hover:bg-foreground/10 transition-all text-foreground backdrop-blur-md"
+                className="absolute top-4 right-4 md:top-8 md:right-8 z-30 p-2.5 md:p-4 border rounded-full hover:bg-foreground/10 transition-all text-foreground backdrop-blur-md"
                 style={{ borderColor: 'rgba(var(--surface),0.2)', background: 'rgba(var(--surface-invert),0.5)' }}
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="aspect-square lg:aspect-auto border-b lg:border-b-0 lg:border-r flex items-center justify-center overflow-hidden relative" style={{ background: 'rgba(var(--surface-invert),0.3)', borderColor: 'rgba(var(--surface),0.1)' }}>
+              <div className="aspect-[4/3] sm:aspect-square lg:aspect-auto border-b lg:border-b-0 lg:border-r flex items-center justify-center overflow-hidden relative" style={{ background: 'rgba(var(--surface-invert),0.3)', borderColor: 'rgba(var(--surface),0.1)' }}>
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-30" />
                 <img
                   src={certificates[selected].image}
@@ -205,26 +209,22 @@ const Certificates = () => {
                 />
               </div>
 
-              <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
+              <div className="p-6 md:p-12 lg:p-16 flex flex-col justify-center relative">
                 <Icon
                   icon={certificates[selected].icon}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] opacity-[0.03] pointer-events-none"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] sm:text-[15rem] opacity-[0.03] pointer-events-none"
                 />
-
-                <p className="font-mono text-[10px] text-amber-500 uppercase tracking-widest mb-6 relative z-10">
-                  // Certification_Registry_ID
-                </p>
-                <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tighter text-foreground relative z-10 uppercase">
+                <h2 className="text-2xl sm:text-5xl font-bold mb-4 tracking-tighter text-foreground relative z-10 uppercase">
                   {certificates[selected].title}
                 </h2>
-                <p className="text-xl text-muted-foreground mb-8 italic relative z-10">
+                <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 italic relative z-10">
                   {certificates[selected].issuer}
                 </p>
-                <p className="text-foreground/70 leading-relaxed font-light mb-12 relative z-10 max-w-md">
+                <p className="text-foreground/70 text-sm sm:text-base leading-relaxed font-light mb-8 sm:mb-12 relative z-10 max-w-md">
                   {certificates[selected].description}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t pt-10 gap-6 relative z-10" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t pt-8 sm:pt-10 gap-6 relative z-10" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
                   <div>
                     <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em] mb-1">
                       Issue_Date

@@ -9,6 +9,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Reveal from "../components/Reveal";
+import usePageTitle from "../hooks/usePageTitle";
 
 const workExperience = [
   {
@@ -111,6 +112,7 @@ const education = [
 ];
 
 const Experience = () => {
+  usePageTitle("Pathway & Growth");
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-indigo-500 pb-40 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -119,28 +121,30 @@ const Experience = () => {
         <div className="absolute bottom-[-10%] -right-[10%] w-[60%] h-[60%] bg-violet-600/10 blur-[140px] rounded-full" />
       </div>
 
-      <section className="relative z-10 px-6 lg:px-0 max-w-7xl mx-auto  pt-32 md:pt-32 pb-16 md:pb-20 border-b backdrop-blur-[2px]" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
-        <Reveal className="">
-          <p className="font-mono text-[10px] text-indigo-400 tracking-[0.3em] uppercase mb-8">
-            // Journey_Timeline
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-indigo-400/50">
-              PATHWAY
-            </span>{" "}
-            <br />
-            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
-              & GROWTH.
-            </span>
-          </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-            A chronological breakdown of my journey as a{" "}
-            <span className="text-indigo-400 font-normal">
-              Software Engineer
-            </span>
-            , focusing on high-performance web systems and technical SEO.
-          </p>
-        </Reveal>
+      <section className="relative z-10 max-w-[1400px] mx-auto pt-32 sm:pt-40 pb-16 md:pb-20 border-b backdrop-blur-[2px]" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
+          <Reveal className="">
+            <p className="font-mono text-[9px] sm:text-[10px] text-indigo-400 tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-6 md:mb-8">
+              // Journey_Timeline
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold tracking-tighter leading-[1.0] sm:leading-[0.85] mb-8 uppercase">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-indigo-400/50">
+                PATHWAY
+              </span>{" "}
+              <br />
+              <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
+                & GROWTH.
+              </span>
+            </h1>
+            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+              A chronological breakdown of my journey as a{" "}
+              <span className="text-indigo-400 font-normal">
+                Software Engineer
+              </span>
+              , focusing on high-performance web systems and technical SEO.
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <section className="relative z-10 py-24 md:py-32 px-6">
@@ -167,8 +171,8 @@ const Experience = () => {
           </div>
         </div>
       </section>
-      <section className="relative z-10 py-24 md:py-32 max-w-7xl mx-auto px-6 lg:px-0  border-y backdrop-blur-[2px]" style={{ background: 'rgba(var(--surface),0.02)', borderColor: 'rgba(var(--surface),0.1)' }}>
-        <div className="max-w-7xl mx-auto">
+      <section className="relative z-10 py-24 md:py-32 max-w-[1400px] mx-auto border-y backdrop-blur-[2px]" style={{ background: 'rgba(var(--surface),0.02)', borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <Reveal className="mb-20">
             <div className="flex items-center gap-6 group">
               <div className="w-14 h-14 rounded-2xl bg-violet-500/10 border flex items-center justify-center transition-all group-hover:border-violet-500/40" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>

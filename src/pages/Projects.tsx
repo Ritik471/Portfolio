@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { ExternalLink, Github, Globe, Code2 } from "lucide-react";
 import Reveal from "../components/Reveal";
+import usePageTitle from "../hooks/usePageTitle";
 
 const projects = [
   {
@@ -36,6 +37,7 @@ const projects = [
 ];
 
 const Projects = () => {
+  usePageTitle("Selected Engineering Works");
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-cyan-500 pb-20 md:pb-28 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -44,26 +46,28 @@ const Projects = () => {
         <div className="absolute top-[-10%] -right-[5%] w-[50%] h-[50%] bg-emerald-600/10 blur-[120px] rounded-full" />
       </div>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-0 pt-32 md:pt-32 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
-        <Reveal>
-          <p className="font-mono text-[10px] text-cyan-400 tracking-[0.3em] uppercase mb-8">
-            // Selected_Works_2026
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.85] mb-8 uppercase">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-cyan-400/50">
-              ENGINEERING
-            </span>{" "}
-            <br />
-            <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
-              REAL-WORLD IMPACT.
-            </span>
-          </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-            A curated collection of systems and interfaces built with focus on
-            <span className="text-cyan-400 font-normal"> performance</span>,
-            scalability, and technical SEO.
-          </p>
-        </Reveal>
+      <section className="relative z-10 max-w-[1400px] mx-auto pt-32 sm:pt-40 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
+          <Reveal>
+            <p className="font-mono text-[9px] sm:text-[10px] text-cyan-400 tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-6 md:mb-8">
+              // Selected_Works_2026
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-bold tracking-tighter leading-[1.0] sm:leading-[0.85] mb-8 uppercase">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-cyan-400/50">
+                ENGINEERING
+              </span>{" "}
+              <br />
+              <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
+                REAL-WORLD IMPACT.
+              </span>
+            </h1>
+            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+              A curated collection of systems and interfaces built with focus on
+              <span className="text-cyan-400 font-normal"> performance</span>,
+              scalability, and technical SEO.
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <section className="relative z-10 py-12 md:py-24 max-w-7xl mx-auto px-6 lg:px-0">
@@ -156,8 +160,8 @@ const Projects = () => {
         </div>
       </section>
 
-      <section className="relative z-10 py-16 md:py-24 max-w-7xl mx-auto px-6 lg:px-0 border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
-        <div className="max-w-7xl mx-auto">
+      <section className="relative z-10 py-16 md:py-24 max-w-[1400px] mx-auto border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <Reveal className="mb-16 text-left">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4">
               The <span className="text-muted-foreground italic">Archive</span>
