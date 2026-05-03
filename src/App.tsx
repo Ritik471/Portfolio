@@ -18,7 +18,6 @@ import useGoogleAnalytics from "./hooks/useGoogleAnalytics";
 const queryClient = new QueryClient();
 
 const App = () => {
-  useGoogleAnalytics("G-T8Y5800CFZ");
   return (
   <ThemeProvider>
     <QueryClientProvider client={queryClient}>
