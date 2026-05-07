@@ -52,12 +52,6 @@ export default defineConfig(() => ({
           if (id.includes("framer-motion")) return "motion";
           if (id.includes("@iconify")) return "iconify";
           if (id.includes("recharts") || id.includes("d3-")) return "charts";
-          if (
-            id.includes("react-activity-calendar") ||
-            id.includes("react-github-calendar")
-          ) {
-            return "github-calendar";
-          }
           if (id.includes("@radix-ui")) return "radix";
           if (id.includes("@tanstack")) return "query";
           if (id.includes("react-hook-form") || id.includes("@hookform")) {
