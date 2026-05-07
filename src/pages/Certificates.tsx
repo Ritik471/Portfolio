@@ -4,48 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
 import usePageTitle from "../hooks/usePageTitle";
-
-const certificates = [
-  {
-    title: "Flutter and Dart Complete Guide",
-    issuer: "Udemy",
-    date: "2023",
-    link: "https://www.linkedin.com/in/ritikshah2000/details/certifications/",
-    image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070",
-    description:
-      "Comprehensive course in Flutter and Dart, covering fundamental concepts essential for Flutter app development.",
-    icon: "logos:flutter",
-    glow: "group-hover:border-blue-500/30",
-    accent: "text-blue-400",
-  },
-  {
-    title: "RealWorld Projects with Flutter",
-    issuer: "Infosys Springboard",
-    date: "2023",
-    link: "https://www.linkedin.com/in/ritikshah2000/details/certifications/",
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072",
-    description:
-      "Successfully completing a course in Flutter and Dart by Infosys Springboard, which taught to develop Real World Projects.",
-    icon: "logos:flutter",
-    glow: "group-hover:border-orange-500/30",
-    accent: "text-orange-400",
-  },
-  {
-    title: "Hackoverflow 1.0",
-    issuer: "National-Level Hackathon",
-    date: "2023",
-    link: "https://www.linkedin.com/in/ritikshah2000/details/certifications/",
-    image:
-      "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070",
-    description:
-      "Certified for participation in a national-level hackathon, competing against students nationwide.",
-    icon: "logos:google-cloud",
-    glow: "group-hover:border-blue-400/30",
-    accent: "text-blue-300",
-  },
-];
+import { certificates } from "../data/certificates";
 
 const Certificates = () => {
   usePageTitle("Certified Excellence");
@@ -148,8 +107,6 @@ const Certificates = () => {
 
         <Reveal delay={0.4}>
           <div className="max-w-7xl mx-auto p-8 sm:p-12 border rounded-[2rem] sm:rounded-[3rem] text-center relative overflow-hidden group" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.02)' }}>
-
-            {/* Fixed: added pointer-events-none */}
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-blue-500/5 via-amber-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
             <Icon icon="line-md:linkedin" className="text-5xl text-blue-400 mb-6 mx-auto group-hover:scale-110 transition-transform duration-500" />

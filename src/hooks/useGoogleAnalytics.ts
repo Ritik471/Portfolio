@@ -15,10 +15,9 @@ const useGoogleAnalytics = (measurementId: string) => {
 
 export default useGoogleAnalytics;
 
-// Add gtag to window type definition
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
-    dataLayer: any[];
+    gtag: (...args: unknown[]) => void;
+    dataLayer: unknown[];
   }
 }

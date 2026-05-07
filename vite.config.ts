@@ -1,14 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   server: {
     host: "localhost",
     port: 8080,
-    strictPort: true, // Prevents Vite from switching to 8081 if 8080 is busy
+    strictPort: false,
     hmr: {
       overlay: false,
     },
@@ -38,10 +36,48 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    chunkSizeWarningLimit: 700,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+
+          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("@iconify")) return "iconify";
+          if (id.includes("recharts") || id.includes("d3-")) return "charts";
+          if (
+            id.includes("react-activity-calendar") ||
+            id.includes("react-github-calendar")
+          ) {
+            return "github-calendar";
+          }
+          if (id.includes("@radix-ui")) return "radix";
+          if (id.includes("@tanstack")) return "query";
+          if (id.includes("react-hook-form") || id.includes("@hookform")) {
+            return "forms";
+          }
+          if (
+            id.includes("react-router") ||
+            id.includes("@remix-run/router")
+          ) {
+            return "router";
+          }
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("/scheduler/")
+          ) {
+            return "react-vendor";
+          }
+        },
+      },
     },
   },
 }));

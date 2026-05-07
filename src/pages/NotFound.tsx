@@ -1,7 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Home, ArrowLeft, Terminal } from "lucide-react";
+import { Home, ArrowLeft } from "lucide-react";
 import Reveal from "../components/Reveal";
 
 const NotFound = () => {
@@ -13,7 +13,6 @@ const NotFound = () => {
 
   return (
     <div className="relative min-h-screen themed-bg themed-text flex items-center justify-center p-6 overflow-hidden">
-      {/* Background Elements */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <div className="absolute top-[-10%] -left-[10%] w-[70%] h-[70%] bg-red-600/10 blur-[140px] rounded-full animate-pulse" />

@@ -1,32 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Home,
-  User,
-  FolderOpen,
-  Briefcase,
-  Award,
-  Mail,
-  Menu,
-  X,
-  Sun,
-  Moon,
-  Monitor,
-} from "lucide-react";
+import { Menu, X, Sun, Moon, Monitor } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
 import ThemeToggle from "./ThemeToggle";
-
-const navItems = [
-  { label: "Home", path: "/", icon: Home },
-  { label: "About", path: "/about", icon: User },
-  { label: "Projects", path: "/projects", icon: FolderOpen },
-  { label: "Experience", path: "/experience", icon: Briefcase },
-  { label: "Certificates", path: "/certificates", icon: Award },
-  { label: "Contact", path: "/contact", icon: Mail },
-];
-
-
+import { navItems } from "../data/navigation";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -35,14 +13,12 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <motion.aside
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="fixed left-6 top-64 z-50 hidden lg:flex flex-col items-center gap-4"
       >
-        {/* Logo Monogram */}
         <Link to="/" className="group relative">
           <div className="w-16 h-16 glass-strong border border-surface-20 rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]">
             <img
@@ -51,11 +27,9 @@ const Sidebar = () => {
               className="object-contain rounded-2xl brightness-125 group-hover:scale-110 transition-transform duration-500"
             />
           </div>
-          {/* Subtle glow effect behind logo */}
           <div className="absolute inset-0 -z-10 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </Link>
 
-        {/* Navigation Items */}
         <div className="border-[1px] border-surface-20 rounded-3xl p-3 flex flex-col gap-2 shadow-2xl backdrop-blur-md">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -105,11 +79,9 @@ const Sidebar = () => {
           })}
         </div>
 
-        {/* Theme Toggle - below sidebar in matching box */}
         <ThemeToggle />
       </motion.aside>
 
-      {/* Mobile Header */}
       <div className="fixed top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 z-50 flex justify-between items-center lg:hidden">
         <Link
           to="/"
@@ -123,7 +95,6 @@ const Sidebar = () => {
         </Link>
 
         <div className="flex gap-2 sm:gap-3">
-          {/* Mobile Theme Toggle Button */}
           <button
             onClick={() => {
               const modes: ("light" | "dark" | "system")[] = ["light", "dark", "system"];
@@ -156,7 +127,6 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -218,8 +188,6 @@ const Sidebar = () => {
                   );
                 })}
               </div>
-
-              {/* Mobile theme toggle moved to header for better accessibility and compact menu */}
             </motion.div>
           </motion.div>
         )}

@@ -26,7 +26,6 @@ const ThemeToggle = () => {
         onClick={cycleTheme}
         className="relative group flex items-center justify-center p-4 rounded-2xl transition-all duration-300 text-foreground hover:bg-[rgba(var(--surface),0.10)]"
       >
-        {/* Tooltip matching Sidebar Dock */}
         <div
           className="absolute left-16 px-3 py-1 text-xs font-bold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-[-10px] group-hover:translate-x-0 shadow-lg whitespace-nowrap z-50"
           style={{

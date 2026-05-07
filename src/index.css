@@ -6,7 +6,6 @@
 
 @layer base {
 
-  /* ── Dark Mode (default) ── */
   :root,
   .dark {
     --background: 0 0% 0%;
@@ -52,7 +51,6 @@
     --sidebar-border: 0 0% 100% / 0.08;
     --sidebar-ring: 0 0% 100% / 0.2;
 
-    /* Theme-aware tokens */
     --page-bg: #030303;
     --page-text: #ffffff;
     --surface: 220 230 250;
@@ -60,7 +58,6 @@
     --noise-opacity: 0.04;
   }
 
-  /* ── Light Mode ── */
   .light {
     --background: 0 0% 98%;
     --foreground: 0 0% 8%;
@@ -105,7 +102,6 @@
     --sidebar-border: 0 0% 0% / 0.08;
     --sidebar-ring: 0 0% 0% / 0.15;
 
-    /* Theme-aware tokens */
     --page-bg: #f8f8fa;
     --page-text: #111111;
     --surface: 160 170 190;
@@ -169,7 +165,6 @@
     font-family: 'Fira Code', monospace;
   }
 
-  /* ── Theme-aware color utilities ── */
   .themed-bg {
     background-color: var(--page-bg);
   }
@@ -178,7 +173,6 @@
     color: var(--page-text);
   }
 
-  /* Surface color utilities using RGB tokens */
   .surface-1 {
     background: rgba(var(--surface), 0.01);
   }

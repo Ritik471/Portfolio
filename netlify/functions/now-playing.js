@@ -1,10 +1,8 @@
 export const handler = async (event, context) => {
-    // These pull from your Netlify Dashboard (NON-VITE names)
     const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } = process.env;
     const basic = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64');
 
     try {
-        // 1. Get Access Token
         const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -18,7 +16,6 @@ export const handler = async (event, context) => {
         });
         const { access_token } = await tokenRes.json();
 
-        // 2. TRY "Now Playing"
         const nowPlayingRes = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
             headers: { Authorization: `Bearer ${access_token}` },
         });
@@ -35,13 +32,12 @@ export const handler = async (event, context) => {
                         artist: song.item.artists.map(a => a.name).join(', '),
                         albumArt: song.item.album.images[0].url,
                         link: song.item.external_urls.spotify,
-                        durationMs: song.item.duration_ms, // Added for your progress bar logic
+                        durationMs: song.item.duration_ms,
                     }),
                 };
             }
         }
 
-        // 3. FALLBACK to "Recently Played"
         const recentlyRes = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
             headers: { Authorization: `Bearer ${access_token}` },
         });

@@ -1,84 +1,74 @@
-# Welcome to your Lovable project
+# starfall-port
 
-## Project info
+Personal portfolio for **Ritik Shah** — Software Engineer & Frontend Architect.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Live: [ritikshah-portfolio.netlify.app](https://ritikshah-portfolio.netlify.app/)
 
-## How can I edit this code?
+## Tech stack
 
-There are several ways of editing your application.
+- **Vite** + **TypeScript** + **React 18**
+- **Tailwind CSS** + **shadcn/ui** (Radix primitives)
+- **Framer Motion** for scroll-driven animation
+- **React Router 6**, **TanStack Query**, **React Hook Form** + **Zod**
+- **Resend** + **Netlify Functions** for the contact form
+- **Vitest** + Testing Library for unit tests
 
-**Use Lovable**
+## Getting started
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Requires Node.js 18+ and npm.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+git clone <repo-url>
+cd starfall-port
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The dev server runs on [http://localhost:8080](http://localhost:8080) (port is `strictPort`, so it won't fall back).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available scripts
 
-**Use GitHub Codespaces**
+| Script              | Description                                  |
+| ------------------- | -------------------------------------------- |
+| `npm run dev`       | Start the Vite dev server                    |
+| `npm run build`     | Production build to `dist/`                  |
+| `npm run build:dev` | Development-mode build                       |
+| `npm run preview`   | Preview the production build locally         |
+| `npm run lint`      | Run ESLint over the project                  |
+| `npm run test`      | Run the Vitest suite once                    |
+| `npm run test:watch`| Run Vitest in watch mode                     |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project layout
 
-## Contact Form Setup (Resend)
+```
+index.html               Root HTML, SEO/OG tags, GA snippet
+netlify.toml             Netlify build + redirects
+netlify/functions/       Serverless endpoints (send-email, now-playing)
+public/                  Static assets (robots.txt, sitemap.xml, _redirects)
+src/
+  App.tsx                Providers + router
+  main.tsx, index.css
+  pages/                 Index, About, Projects, Experience, Certificates, Contact, NotFound
+  components/            Layout, Dock, NavLink, Reveal, ScrollToTop, ThemeToggle
+  components/ui/         shadcn/ui primitives
+  hooks/                 useTheme, usePageTitle, useGoogleAnalytics, use-toast, use-mobile
+  lib/utils.ts           cn() helper
+  test/                  Vitest setup + examples
+```
 
-The contact form is powered by **Resend** and **Netlify Functions**. To make it work in production:
+## Contact form (Resend + Netlify Functions)
 
-1.  **Get an API Key**: Sign up at [resend.com](https://resend.com) and generate an API key.
-2.  **Netlify Configuration**:
-    *   Go to your Netlify Dashboard -> Site Settings -> Environment Variables.
-    *   Add a new variable: `RESEND_API_KEY` with your key as the value.
-3.  **Local Testing**:
-    *   Run `npx netlify dev` to test the email functionality locally.
+The `/contact` form posts to `netlify/functions/send-email.js`, which uses [Resend](https://resend.com) to deliver mail.
 
-## What technologies are used for this project?
+1. Create a Resend account and generate an API key.
+2. In Netlify → **Site settings → Environment variables**, add:
+   - `RESEND_API_KEY` — your Resend key
+3. For local testing, run `npx netlify dev` so the functions are served alongside Vite.
 
-This project is built with:
+## Deployment
 
-- **Vite** & **TypeScript**
-- **React** & **Framer Motion**
-- **Tailwind CSS** & **shadcn/ui**
-- **Resend** (Email Infrastructure)
-- **Netlify Functions** (Serverless Backend)
+The site deploys to Netlify on push. `netlify.toml` and `public/_redirects` handle the SPA fallback so client-side routes (`/about`, `/projects`, …) resolve correctly on hard refresh.
 
-## How can I deploy this project?
+## License
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+All rights reserved. Personal portfolio — please don't redistribute the content (copy, branding, project write-ups). Feel free to take inspiration from the code.

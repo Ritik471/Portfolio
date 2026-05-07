@@ -1,38 +1,11 @@
 import { useState } from "react";
-import { Send, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
+import { Send, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
+import { toast } from "sonner";
 import Reveal from "../components/Reveal";
 import usePageTitle from "../hooks/usePageTitle";
-
-import { toast } from "sonner";
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "ritikshah1206@gmail.com",
-    color: "text-emerald-400",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Nagpur, India",
-    color: "text-emerald-400",
-  },
-  {
-    icon: Clock,
-    label: "Timezone",
-    value: "IST (GMT +5:30)",
-    color: "text-emerald-400",
-  },
-];
-
-const socials = [
-  { icon: "line-md:github-loop", label: "GitHub", href: "https://github.com/Ritik471" },
-  { icon: "line-md:linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/ritikshah2000/" },
-  { icon: "logos:whatsapp-icon", label: "WhatsApp", href: "https://wa.me/917888257529" },
-];
+import { contactInfo, socials } from "../data/contact";
 
 const Contact = () => {
   usePageTitle("Initiate Connection");
@@ -62,8 +35,10 @@ const Contact = () => {
       let data;
       try {
         data = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Invalid response from server. If developing locally, ensure you are running 'netlify dev'.");
+      } catch {
+        throw new Error(
+          "Invalid response from server. If developing locally, ensure you are running 'netlify dev'.",
+        );
       }
 
       if (response.ok) {
@@ -74,8 +49,9 @@ const Contact = () => {
       } else {
         throw new Error(data.error || "Failed to transmit message");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Uplink failure. Please try again.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Uplink failure. Please try again.";
+      toast.error(message);
     } finally {
       setIsSending(false);
     }

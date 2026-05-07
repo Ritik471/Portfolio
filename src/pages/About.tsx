@@ -1,82 +1,50 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
-import {
-  MapPin,
-  Calendar,
-  Coffee,
-  BookOpen,
-} from "lucide-react";
 import Reveal from "../components/Reveal";
 import usePageTitle from "../hooks/usePageTitle";
+import { highlights, skills } from "../data/about";
 
-const highlights = [
-  {
-    icon: MapPin,
-    label: "Based in",
-    value: "Nagpur, India",
-    color: "text-blue-400",
-    bg: "group-hover:bg-blue-500/10",
-  },
-  {
-    icon: Calendar,
-    label: "Experience",
-    value: "1+ Year",
-    color: "text-purple-400",
-    bg: "group-hover:bg-purple-500/10",
-  },
-  {
-    icon: Coffee,
-    label: "Projects",
-    value: "10+ Live",
-    color: "text-emerald-400",
-    bg: "group-hover:bg-emerald-500/10",
-  },
-  {
-    icon: BookOpen,
-    label: "Status",
-    value: "Lifelong Learner",
-    color: "text-yellow-400",
-    bg: "group-hover:bg-yellow-500/10",
-  },
-];
+interface WakaDay {
+  grand_total?: { total_seconds?: number };
+}
 
-const skills = [
-  {
-    category: "Frontend Architecture",
-    icon: "logos:react",
-    items: [
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Tailwind CSS",
-      "Shadcn UI",
-    ],
-    accent: "group-hover:border-blue-500/50",
-    glow: "bg-blue-500/5",
-  },
-  {
-    category: "Mobile Solutions",
-    icon: "logos:flutter",
-    items: ["Flutter", "React Native", "Dart"],
-    accent: "group-hover:border-emerald-500/50",
-    glow: "bg-emerald-500/5",
-  },
-  {
-    category: "Design & UX",
-    icon: "logos:figma",
-    items: ["Figma", "Wireframing", "Prototyping", "Responsive Layouts"],
-    accent: "group-hover:border-purple-500/50",
-    glow: "bg-purple-500/5",
-  },
-  {
-    category: "Specialized",
-    icon: "logos:google-search-console",
-    items: ["Technical SEO", "WordPress", "PostgreSQL", "Git & GitHub"],
-    accent: "group-hover:border-yellow-500/50",
-    glow: "bg-yellow-500/5",
-  },
-];
+interface WakaLangEntry {
+  name?: string;
+  percent?: number;
+  color?: string;
+}
+
+interface SpotifyArtist {
+  name: string;
+}
+
+interface SpotifyTrack {
+  name: string;
+  artists: SpotifyArtist[];
+  album: { images: { url: string }[] };
+  external_urls: { spotify: string };
+  duration_ms: number;
+}
+
+interface SpotifyCurrentlyPlaying {
+  item?: SpotifyTrack;
+  progress_ms?: number;
+}
+
+interface SpotifyRecentResponse {
+  items?: { track: SpotifyTrack }[];
+}
+
+interface SpotifyWidgetPayload {
+  isPlaying: boolean;
+  title: string;
+  artist: string;
+  albumArt: string;
+  link: string;
+  durationMs: number;
+  progressMs?: number;
+}
 
 const About = () => {
   usePageTitle("The Engineer & Builder");
@@ -87,38 +55,42 @@ const About = () => {
     artist: "Spotify",
     albumArt: "https://i.scdn.co/image/ab67616d0000b273b5cecc2a52ae03ad213bf97c",
     durationMs: 0,
-    link: "#"
+    link: "#",
   });
 
   const [wakaData, setWakaData] = useState([
     { name: "TypeScript", percent: 45, color: "#60A5FA" },
     { name: "React", percent: 25, color: "#22D3EE" },
     { name: "Rust", percent: 15, color: "#FB923C" },
-    { name: "Other", percent: 15, color: "#9CA3AF" }
+    { name: "Other", percent: 15, color: "#9CA3AF" },
   ]);
   const [wakaTotalTime, setWakaTotalTime] = useState("34 hrs 12 mins");
 
-  // --- WAKATIME FETCH ---
   useEffect(() => {
-    const ACTIVITY_URL = "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/cb282e26-c3b9-42a6-b9ed-9e4cc04da725.json";
-    const LANGUAGES_URL = "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/b21c1d91-8b1a-4892-a0ba-1fcded6e4bd8.json";
+    const ACTIVITY_URL =
+      "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/cb282e26-c3b9-42a6-b9ed-9e4cc04da725.json";
+    const LANGUAGES_URL =
+      "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/b21c1d91-8b1a-4892-a0ba-1fcded6e4bd8.json";
 
     Promise.all([
-      fetch(ACTIVITY_URL).then(res => res.json()),
-      fetch(LANGUAGES_URL).then(res => res.json())
+      fetch(ACTIVITY_URL).then((res) => res.json()),
+      fetch(LANGUAGES_URL).then((res) => res.json()),
     ])
       .then(([activityRes, languagesRes]) => {
-        const days = activityRes.data;
+        const days = activityRes.data as WakaDay[] | undefined;
         if (Array.isArray(days)) {
-          const totalSeconds = days.reduce((acc: number, day: any) => acc + (day.grand_total?.total_seconds || 0), 0);
+          const totalSeconds = days.reduce(
+            (acc, day) => acc + (day.grand_total?.total_seconds ?? 0),
+            0,
+          );
           const hours = Math.floor(totalSeconds / 3600);
           const mins = Math.floor((totalSeconds % 3600) / 60);
           setWakaTotalTime(`${hours} hrs ${mins} mins`);
         }
 
-        const langs = languagesRes.data;
+        const langs = languagesRes.data as WakaLangEntry[] | undefined;
         if (Array.isArray(langs)) {
-          const topLangs = langs.slice(0, 4).map((lang: any) => ({
+          const topLangs = langs.slice(0, 4).map((lang) => ({
             name: lang.name || "Other",
             percent: lang.percent || 0,
             color: lang.color || "#9CA3AF",
@@ -126,27 +98,24 @@ const About = () => {
           setWakaData(topLangs);
         }
       })
-      .catch(() => { });
+      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
     const fetchSpotify = async () => {
       try {
         const isLocal = window.location.hostname === "localhost";
-        let data;
+        let data: SpotifyWidgetPayload | undefined;
 
         if (isLocal) {
-          // Map local VITE variables to standard names for this block
           const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
           const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
           const refreshToken = import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN;
 
-          // If local secrets are missing, exit early to avoid btoa error
           if (!clientId || !clientSecret || !refreshToken) return;
 
           const basic = btoa(`${clientId}:${clientSecret}`);
 
-          // 1. Get Access Token via Vite Proxy
           const tokenRes = await fetch("/spotify-token", {
             method: "POST",
             headers: {
@@ -158,40 +127,40 @@ const About = () => {
               refresh_token: refreshToken,
             }),
           });
-          const { access_token } = await tokenRes.json();
+          const tokenJson = (await tokenRes.json()) as { access_token?: string };
+          const access_token = tokenJson.access_token;
+          if (!access_token) return;
 
-          // 2. Try "Now Playing"
           const nowPlayingRes = await fetch("/api-spotify/me/player/currently-playing", {
             headers: { Authorization: `Bearer ${access_token}` },
           });
 
           if (nowPlayingRes.status === 200) {
-            const song = await nowPlayingRes.json();
+            const song = (await nowPlayingRes.json()) as SpotifyCurrentlyPlaying;
             if (song.item) {
               data = {
                 isPlaying: true,
                 title: song.item.name,
-                artist: song.item.artists.map((a: any) => a.name).join(', '),
+                artist: song.item.artists.map((a) => a.name).join(", "),
                 albumArt: song.item.album.images[0].url,
                 link: song.item.external_urls.spotify,
                 durationMs: song.item.duration_ms,
-                progressMs: song.progress_ms,
+                progressMs: song.progress_ms ?? 0,
               };
             }
           }
 
-          // 3. Fallback to "Recently Played"
           if (!data) {
             const recentRes = await fetch("/api-spotify/me/player/recently-played?limit=1", {
               headers: { Authorization: `Bearer ${access_token}` },
             });
-            const recentData = await recentRes.json();
-            if (recentData.items?.length > 0) {
+            const recentData = (await recentRes.json()) as SpotifyRecentResponse;
+            if (recentData.items?.length) {
               const lastTrack = recentData.items[0].track;
               data = {
                 isPlaying: false,
                 title: lastTrack.name,
-                artist: lastTrack.artists.map((a: any) => a.name).join(', '),
+                artist: lastTrack.artists.map((a) => a.name).join(", "),
                 albumArt: lastTrack.album.images[0].url,
                 link: lastTrack.external_urls.spotify,
                 durationMs: lastTrack.duration_ms,
@@ -199,27 +168,25 @@ const About = () => {
             }
           }
         } else {
-          // --- PRODUCTION ---
-          // Hits the Netlify Function which securely has access to non-VITE secrets
           const res = await fetch("/.netlify/functions/now-playing");
-          if (res.ok) data = await res.json();
+          if (res.ok) {
+            data = (await res.json()) as SpotifyWidgetPayload;
+          }
         }
 
-        // Update State
         if (data && data.title) {
           setTrack({
             title: data.title,
             artist: data.artist,
             albumArt: data.albumArt,
             durationMs: data.durationMs || 0,
-            link: data.link
+            link: data.link,
           });
           setIsPlaying(data.isPlaying);
-          // Ensure progress resets to 0 if we are in history mode
           setProgressMs(data.progressMs || 0);
         }
-      } catch (err) {
-        // Catch errors silently
+      } catch {
+        return;
       }
     };
 
@@ -228,12 +195,11 @@ const About = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // --- PROGRESS BAR LOGIC ---
   useEffect(() => {
     let progressInterval: NodeJS.Timeout;
     if (isPlaying && track.durationMs > 0) {
       progressInterval = setInterval(() => {
-        setProgressMs(prev => {
+        setProgressMs((prev) => {
           if (prev >= track.durationMs) return prev;
           return prev + 1000;
         });
@@ -245,19 +211,17 @@ const About = () => {
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
-    return `${minutes}:${Number(seconds) < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
   };
 
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-blue-500 pb-20 md:pb-28 overflow-x-hidden">
-      {/* Background Ambience */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-600/10 blur-[140px] rounded-full" />
       </div>
 
-      {/* Hero Section */}
       <section className="relative z-10 max-w-[1400px] mx-auto pt-32 sm:pt-40 pb-16 md:pb-20 border-b" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <Reveal className="">
@@ -285,7 +249,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Highlights Grid */}
       <section className="relative z-10 py-12 md:py-16 px-6 lg:px-0 " style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {highlights.map((h, i) => {
@@ -312,12 +275,10 @@ const About = () => {
         </div>
       </section>
 
-      {/* Narrative & Live Widgets */}
       <section className="relative max-w-[1400px] mx-auto z-10 py-16 md:py-24 border-t " style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
-            {/* LEFT COLUMN: Narrative Bio */}
             <Reveal className="h-full">
               <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-muted-foreground font-light leading-relaxed h-full flex flex-col justify-center">
                 <p>
@@ -325,7 +286,7 @@ const About = () => {
                   a software engineer with a deep passion for building scalable
                   systems that bridge the gap between technical excellence and
                   thoughtful design. Based in
-                  <span className="text-blue-400 font-normal"> Nagpur</span>, I focus on crafting 
+                  <span className="text-blue-400 font-normal"> Nagpur</span>, I focus on crafting
                   high-performance, SEO-friendly digital platforms.
                 </p>
                 <p>
@@ -333,13 +294,13 @@ const About = () => {
                   <span className="text-foreground font-medium border-b border-blue-500/30">
                     Frontend Engineering
                   </span>
-                  , with strong expertise in the Next.js and React ecosystem. My approach 
-                  is defined by a <span className="text-green-400/90">"User-First"</span> philosophy 
+                  , with strong expertise in the Next.js and React ecosystem. My approach
+                  is defined by a <span className="text-green-400/90">"User-First"</span> philosophy
                   integrated with technical SEO best practices.
                 </p>
                 <p>
-                  My experience spans across delivering international AI projects, 
-                  designing intuitive UIs, and building cross-platform mobile solutions. 
+                  My experience spans across delivering international AI projects,
+                  designing intuitive UIs, and building cross-platform mobile solutions.
                   I believe great software is about creating
                   <span className="text-transparent bg-clip-text  bg-gradient-to-r from-purple-400 to-blue-400 italic font-medium ml-1">
                     intuitive and functional digital experiences.
@@ -348,10 +309,8 @@ const About = () => {
               </div>
             </Reveal>
 
-            {/* RIGHT COLUMN: Widgets Stack */}
             <div className="space-y-6 flex flex-col h-full">
 
-              {/* Spotify Widget - flex-1 allows it to grow to fill half the space */}
               <Reveal delay={0.2} className="flex-1">
                 <div className="p-6 md:p-8 border border-white/10 bg-white/[0.03] rounded-3xl md:rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden group hover:border-[#1DB954]/50 transition-all duration-500 shadow-2xl h-full flex flex-col justify-center">
                   <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -406,7 +365,6 @@ const About = () => {
                 </div>
               </Reveal>
 
-              {/* WakaTime Widget - flex-1 allows it to fill the other half of the space */}
               <Reveal delay={0.3} className="flex-1">
                 <div className="p-6 md:p-8 border border-white/10 bg-white/[0.02] rounded-3xl md:rounded-[2.5rem] flex flex-col justify-between gap-4 group hover:border-purple-500/30 transition-all backdrop-blur-sm h-full shadow-2xl relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -429,7 +387,7 @@ const About = () => {
                     </p>
 
                     <div className="flex w-full h-2 rounded-full overflow-hidden gap-0.5 mb-6" style={{ background: 'rgba(var(--surface),0.1)' }}>
-                      {wakaData.map(lang => (
+                      {wakaData.map((lang) => (
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${lang.percent}%` }}
@@ -446,7 +404,7 @@ const About = () => {
                     </div>
 
                     <div className="flex flex-wrap gap-x-6 gap-y-3">
-                      {wakaData.map(lang => (
+                      {wakaData.map((lang) => (
                         <div key={lang.name} className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full shadow-lg" style={{ backgroundColor: lang.color }} />
                           <span className="text-xs text-muted-foreground font-mono uppercase group-hover:text-foreground/80 transition-colors">
@@ -463,7 +421,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Expertise Section */}
       <section className="relative z-10 py-16 md:py-24 max-w-[1400px] mx-auto border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <Reveal className=" mb-16 text-left lg:text-left">

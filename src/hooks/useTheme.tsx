@@ -55,7 +55,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     setThemeState(t);
     try {
       localStorage.setItem("theme", t);
-    } catch {}
+    } catch {
+      void 0;
+    }
   };
 
   return (
