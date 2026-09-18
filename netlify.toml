@@ -3,6 +3,12 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[build.environment]
+  # LASTFM_USERNAME is a public Last.fm handle, not a secret. Its value is a
+  # substring of the public contact email that appears in contact.ts, the
+  # send-email function and the CV, so secrets scanning flags it as leaked.
+  SECRETS_SCAN_OMIT_KEYS = "LASTFM_USERNAME"
+
 [dev]
   command = "npm run dev"
   port = 8888
