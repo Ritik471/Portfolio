@@ -4,26 +4,27 @@ const JSON_HEADERS = {
     "Cache-Control": "no-store",
 };
 
+// Last.fm serves this placeholder when a track has no real cover art.
+const LASTFM_PLACEHOLDER = "2a96cbd8b46e442fc41c2b86b821562f";
+const FALLBACK_ART = "https://i.scdn.co/image/ab67616d0000b273b5cecc2a52ae03ad213bf97c";
+
 const fail = (statusCode, stage, detail) => ({
     statusCode,
     headers: JSON_HEADERS,
     body: JSON.stringify({ error: true, stage, detail }),
 });
 
-const toPayload = (track, isPlaying, progressMs = 0) => ({
-    isPlaying,
-    title: track.name,
-    artist: track.artists.map(a => a.name).join(', '),
-    albumArt: track.album.images[0]?.url ?? null,
-    link: track.external_urls.spotify,
-    durationMs: track.duration_ms,
-    progressMs,
-});
+const pickArt = (images) => {
+    if (!Array.isArray(images)) return FALLBACK_ART;
+    const url = [...images].reverse().find(i => i["#text"])?.["#text"];
+    if (!url || url.includes(LASTFM_PLACEHOLDER)) return FALLBACK_ART;
+    return url;
+};
 
 export const handler = async (event, context) => {
-    const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } = process.env;
+    const { LASTFM_API_KEY, LASTFM_USERNAME } = process.env;
 
-    const missing = Object.entries({ SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN })
+    const missing = Object.entries({ LASTFM_API_KEY, LASTFM_USERNAME })
         .filter(([, value]) => !value)
         .map(([key]) => key);
 
@@ -31,72 +32,52 @@ export const handler = async (event, context) => {
         return fail(500, "env", `Missing environment variable(s): ${missing.join(', ')}`);
     }
 
-    const basic = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64');
+    const url = new URL("https://ws.audioscrobbler.com/2.0/");
+    url.searchParams.set("method", "user.getrecenttracks");
+    url.searchParams.set("user", LASTFM_USERNAME);
+    url.searchParams.set("api_key", LASTFM_API_KEY);
+    url.searchParams.set("format", "json");
+    url.searchParams.set("limit", "1");
 
     try {
-        const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                Authorization: `Basic ${basic}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                grant_type: 'refresh_token',
-                refresh_token: SPOTIFY_REFRESH_TOKEN
-            }),
-        });
+        const res = await fetch(url, { headers: { "User-Agent": "ritikshah-portfolio" } });
+        const json = await res.json().catch(() => ({}));
 
-        const tokenJson = await tokenRes.json().catch(() => ({}));
-
-        if (!tokenRes.ok || !tokenJson.access_token) {
-            return fail(502, "token", {
-                status: tokenRes.status,
-                error: tokenJson.error ?? null,
-                description: tokenJson.error_description ?? null,
+        // Last.fm signals API errors in the body, often still with HTTP 200.
+        if (!res.ok || json.error) {
+            return fail(502, "lastfm", {
+                status: res.status,
+                error: json.error ?? null,
+                message: json.message ?? null,
             });
         }
 
-        const access_token = tokenJson.access_token;
-        const auth = { Authorization: `Bearer ${access_token}` };
+        // Last.fm returns `track` as an object (not an array) when a single
+        // result comes back, and prepends the now-playing track to the list
+        // on top of the requested limit.
+        const raw = json.recenttracks?.track;
+        const track = Array.isArray(raw) ? raw[0] : raw;
 
-        const nowPlayingRes = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-            headers: auth,
-        });
-
-        if (nowPlayingRes.status === 200) {
-            const song = await nowPlayingRes.json().catch(() => ({}));
-            if (song.item) {
-                return {
-                    statusCode: 200,
-                    headers: JSON_HEADERS,
-                    body: JSON.stringify(toPayload(song.item, true, song.progress_ms ?? 0)),
-                };
-            }
-        } else if (nowPlayingRes.status === 401 || nowPlayingRes.status === 403) {
-            const detail = await nowPlayingRes.text().catch(() => "");
-            return fail(502, "currently-playing", { status: nowPlayingRes.status, detail });
+        if (!track) {
+            return fail(404, "empty", "Last.fm returned no scrobbles for this user");
         }
 
-        const recentlyRes = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
-            headers: auth,
-        });
-
-        if (!recentlyRes.ok) {
-            const detail = await recentlyRes.text().catch(() => "");
-            return fail(502, "recently-played", { status: recentlyRes.status, detail });
-        }
-
-        const recentData = await recentlyRes.json().catch(() => ({}));
-
-        if (recentData.items?.length) {
-            return {
-                statusCode: 200,
-                headers: JSON_HEADERS,
-                body: JSON.stringify(toPayload(recentData.items[0].track, false)),
-            };
-        }
-
-        return fail(404, "empty", "Spotify returned no currently-playing track and no recent history");
+        return {
+            statusCode: 200,
+            headers: JSON_HEADERS,
+            body: JSON.stringify({
+                isPlaying: track["@attr"]?.nowplaying === "true",
+                title: track.name,
+                artist: track.artist?.["#text"] ?? "",
+                album: track.album?.["#text"] ?? "",
+                albumArt: pickArt(track.image),
+                link: track.url,
+                // Last.fm exposes neither track length nor playback position,
+                // so the UI hides the progress bar when durationMs is 0.
+                durationMs: 0,
+                progressMs: 0,
+            }),
+        };
     } catch (error) {
         return fail(500, "exception", error.message);
     }

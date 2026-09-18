@@ -15,28 +15,13 @@ interface WakaLangEntry {
   color?: string;
 }
 
-interface SpotifyArtist {
-  name: string;
+interface NowPlayingError {
+  error: true;
+  stage: string;
+  detail: unknown;
 }
 
-interface SpotifyTrack {
-  name: string;
-  artists: SpotifyArtist[];
-  album: { images: { url: string }[] };
-  external_urls: { spotify: string };
-  duration_ms: number;
-}
-
-interface SpotifyCurrentlyPlaying {
-  item?: SpotifyTrack;
-  progress_ms?: number;
-}
-
-interface SpotifyRecentResponse {
-  items?: { track: SpotifyTrack }[];
-}
-
-interface SpotifyWidgetPayload {
+interface NowPlayingPayload {
   isPlaying: boolean;
   title: string;
   artist: string;
@@ -44,6 +29,7 @@ interface SpotifyWidgetPayload {
   link: string;
   durationMs: number;
   progressMs?: number;
+  album?: string;
 }
 
 const About = () => {
@@ -102,107 +88,45 @@ const About = () => {
   }, []);
 
   useEffect(() => {
-    const fetchSpotify = async () => {
+    let cancelled = false;
+
+    const fetchNowPlaying = async () => {
       try {
-        const isLocal = window.location.hostname === "localhost";
-        let data: SpotifyWidgetPayload | undefined;
+        const res = await fetch("/.netlify/functions/now-playing");
+        if (res.status === 204) return;
 
-        if (isLocal) {
-          const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-          const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-          const refreshToken = import.meta.env.VITE_SPOTIFY_REFRESH_TOKEN;
+        const json = (await res.json().catch(() => undefined)) as
+          | NowPlayingPayload
+          | NowPlayingError
+          | undefined;
 
-          if (!clientId || !clientSecret || !refreshToken) return;
-
-          const basic = btoa(`${clientId}:${clientSecret}`);
-
-          const tokenRes = await fetch("/spotify-token", {
-            method: "POST",
-            headers: {
-              Authorization: `Basic ${basic}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-              grant_type: "refresh_token",
-              refresh_token: refreshToken,
-            }),
-          });
-          const tokenJson = (await tokenRes.json()) as { access_token?: string };
-          const access_token = tokenJson.access_token;
-          if (!access_token) return;
-
-          const nowPlayingRes = await fetch("/api-spotify/me/player/currently-playing", {
-            headers: { Authorization: `Bearer ${access_token}` },
-          });
-
-          if (nowPlayingRes.status === 200) {
-            const song = (await nowPlayingRes.json()) as SpotifyCurrentlyPlaying;
-            if (song.item) {
-              data = {
-                isPlaying: true,
-                title: song.item.name,
-                artist: song.item.artists.map((a) => a.name).join(", "),
-                albumArt: song.item.album.images[0].url,
-                link: song.item.external_urls.spotify,
-                durationMs: song.item.duration_ms,
-                progressMs: song.progress_ms ?? 0,
-              };
-            }
-          }
-
-          if (!data) {
-            const recentRes = await fetch("/api-spotify/me/player/recently-played?limit=1", {
-              headers: { Authorization: `Bearer ${access_token}` },
-            });
-            const recentData = (await recentRes.json()) as SpotifyRecentResponse;
-            if (recentData.items?.length) {
-              const lastTrack = recentData.items[0].track;
-              data = {
-                isPlaying: false,
-                title: lastTrack.name,
-                artist: lastTrack.artists.map((a) => a.name).join(", "),
-                albumArt: lastTrack.album.images[0].url,
-                link: lastTrack.external_urls.spotify,
-                durationMs: lastTrack.duration_ms,
-              };
-            }
-          }
-        } else {
-          const res = await fetch("/.netlify/functions/now-playing");
-          if (res.status === 204) return;
-
-          const json = (await res.json().catch(() => undefined)) as
-            | SpotifyWidgetPayload
-            | { error: true; stage: string; detail: unknown }
-            | undefined;
-
-          if (!res.ok || !json || "error" in json) {
-            console.warn("[spotify] now-playing failed", res.status, json);
-            return;
-          }
-
-          data = json;
+        if (!res.ok || !json || "error" in json) {
+          console.warn("[now-playing] failed", res.status, json);
+          return;
         }
 
-        if (data && data.title) {
-          setTrack({
-            title: data.title,
-            artist: data.artist,
-            albumArt: data.albumArt,
-            durationMs: data.durationMs || 0,
-            link: data.link,
-          });
-          setIsPlaying(data.isPlaying);
-          setProgressMs(data.progressMs || 0);
-        }
+        if (cancelled || !json.title) return;
+
+        setTrack({
+          title: json.title,
+          artist: json.artist,
+          albumArt: json.albumArt,
+          durationMs: json.durationMs || 0,
+          link: json.link,
+        });
+        setIsPlaying(json.isPlaying);
+        setProgressMs(json.progressMs || 0);
       } catch {
         return;
       }
     };
 
-    fetchSpotify();
-    const interval = setInterval(fetchSpotify, 15000);
-    return () => clearInterval(interval);
+    fetchNowPlaying();
+    const interval = setInterval(fetchNowPlaying, 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -355,7 +279,7 @@ const About = () => {
                         {track.title ? track.artist : "Syncing Spotify..."}
                       </p>
 
-                      {isPlaying && (
+                      {isPlaying && track.durationMs > 0 && (
                         <div className="w-full mt-4 animate-in fade-in duration-500">
                           <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-2">
                             <span>{formatTime(progressMs)}</span>
@@ -368,6 +292,23 @@ const About = () => {
                               className="h-full bg-[#1DB954]"
                             />
                           </div>
+                        </div>
+                      )}
+
+                      {isPlaying && track.durationMs === 0 && (
+                        <div className="flex items-center gap-2 mt-4 animate-in fade-in duration-500">
+                          <div className="flex items-end gap-[3px] h-3">
+                            {[0, 150, 300].map((delay) => (
+                              <span
+                                key={delay}
+                                className="w-[3px] bg-[#1DB954] animate-pulse"
+                                style={{ height: "100%", animationDelay: `${delay}ms` }}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                            Live
+                          </span>
                         </div>
                       )}
                     </div>

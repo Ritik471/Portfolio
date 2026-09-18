@@ -17,18 +17,6 @@ export default defineConfig(() => ({
         secure: true,
         rewrite: (path) => path.replace(/^\/api-waka/, ''),
       },
-      '/api-spotify': {
-        target: 'https://api.spotify.com/v1',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api-spotify/, ''),
-      },
-      '/spotify-token': {
-        target: 'https://accounts.spotify.com/api/token',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/spotify-token/, ''),
-      },
       '/.netlify/functions': {
         target: 'http://localhost:8888',
         changeOrigin: true,
