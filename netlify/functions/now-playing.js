@@ -6,7 +6,7 @@ const JSON_HEADERS = {
 
 // Last.fm serves this placeholder when a track has no real cover art.
 const LASTFM_PLACEHOLDER = "2a96cbd8b46e442fc41c2b86b821562f";
-const FALLBACK_ART = "https://i.scdn.co/image/ab67616d0000b273b5cecc2a52ae03ad213bf97c";
+const FALLBACK_ART = "/placeholder.svg";
 
 const fail = (statusCode, stage, detail) => ({
     statusCode,

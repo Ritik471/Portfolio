@@ -11,12 +11,6 @@ export default defineConfig(() => ({
       overlay: false,
     },
     proxy: {
-      '/api-waka': {
-        target: 'https://wakatime.com',
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api-waka/, ''),
-      },
       '/.netlify/functions': {
         target: 'http://localhost:8888',
         changeOrigin: true,

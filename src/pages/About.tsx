@@ -5,15 +5,24 @@ import Reveal from "../components/Reveal";
 import usePageTitle from "../hooks/usePageTitle";
 import { highlights, skills } from "../data/about";
 
-interface WakaDay {
-  grand_total?: { total_seconds?: number };
+interface WakaLang {
+  name: string;
+  percent: number;
+  color: string;
+  text?: string;
 }
 
-interface WakaLangEntry {
-  name?: string;
-  percent?: number;
-  color?: string;
+interface WakaStatsPayload {
+  hasData: boolean;
+  totalSeconds: number;
+  totalText: string;
+  languages: WakaLang[];
+  editors: { name: string; text: string }[];
+  projects: { name: string; text: string }[];
+  range: { start: string; end: string };
 }
+
+type WakaStatus = "loading" | "ready" | "empty";
 
 interface NowPlayingError {
   error: true;
@@ -39,52 +48,51 @@ const About = () => {
   const [track, setTrack] = useState({
     title: "",
     artist: "Spotify",
-    albumArt: "https://i.scdn.co/image/ab67616d0000b273b5cecc2a52ae03ad213bf97c",
+    albumArt: "/placeholder.svg",
     durationMs: 0,
     link: "#",
   });
 
-  const [wakaData, setWakaData] = useState([
-    { name: "TypeScript", percent: 45, color: "#60A5FA" },
-    { name: "React", percent: 25, color: "#22D3EE" },
-    { name: "Rust", percent: 15, color: "#FB923C" },
-    { name: "Other", percent: 15, color: "#9CA3AF" },
-  ]);
-  const [wakaTotalTime, setWakaTotalTime] = useState("34 hrs 12 mins");
+  const [wakaData, setWakaData] = useState<WakaLang[]>([]);
+  const [wakaTotalTime, setWakaTotalTime] = useState<string | null>(null);
+  const [wakaStatus, setWakaStatus] = useState<WakaStatus>("loading");
 
   useEffect(() => {
-    const ACTIVITY_URL =
-      "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/cb282e26-c3b9-42a6-b9ed-9e4cc04da725.json";
-    const LANGUAGES_URL =
-      "/api-waka/share/@30d10488-53fc-4d72-9936-4cfb98c87812/b21c1d91-8b1a-4892-a0ba-1fcded6e4bd8.json";
+    let cancelled = false;
 
-    Promise.all([
-      fetch(ACTIVITY_URL).then((res) => res.json()),
-      fetch(LANGUAGES_URL).then((res) => res.json()),
-    ])
-      .then(([activityRes, languagesRes]) => {
-        const days = activityRes.data as WakaDay[] | undefined;
-        if (Array.isArray(days)) {
-          const totalSeconds = days.reduce(
-            (acc, day) => acc + (day.grand_total?.total_seconds ?? 0),
-            0,
-          );
-          const hours = Math.floor(totalSeconds / 3600);
-          const mins = Math.floor((totalSeconds % 3600) / 60);
-          setWakaTotalTime(`${hours} hrs ${mins} mins`);
+    fetch("/.netlify/functions/waka-stats")
+      .then(async (res) => {
+        const json = (await res.json().catch(() => undefined)) as
+          | WakaStatsPayload
+          | NowPlayingError
+          | undefined;
+
+        if (cancelled) return;
+
+        if (!res.ok || !json || "error" in json) {
+          console.warn("[waka-stats] failed", res.status, json);
+          setWakaStatus("empty");
+          return;
         }
 
-        const langs = languagesRes.data as WakaLangEntry[] | undefined;
-        if (Array.isArray(langs)) {
-          const topLangs = langs.slice(0, 4).map((lang) => ({
-            name: lang.name || "Other",
-            percent: lang.percent || 0,
-            color: lang.color || "#9CA3AF",
-          }));
-          setWakaData(topLangs);
+        // Nothing tracked in the window: show an explicit empty state rather
+        // than inventing numbers.
+        if (!json.hasData || json.languages.length === 0) {
+          setWakaStatus("empty");
+          return;
         }
+
+        setWakaTotalTime(json.totalText);
+        setWakaData(json.languages);
+        setWakaStatus("ready");
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (!cancelled) setWakaStatus("empty");
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -327,11 +335,34 @@ const About = () => {
                         WakaTime / 7 Days
                       </p>
                     </div>
-                    <div className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono text-[10px] uppercase tracking-widest rounded-full">
-                      Live
+                    <div
+                      className={`px-3 py-1 font-mono text-[10px] uppercase tracking-widest rounded-full border ${
+                        wakaStatus === "ready"
+                          ? "bg-purple-500/10 border-purple-500/20 text-purple-400"
+                          : "border-white/10 text-muted-foreground"
+                      }`}
+                      style={wakaStatus === "ready" ? undefined : { background: 'rgba(var(--surface),0.05)' }}
+                    >
+                      {wakaStatus === "ready" ? "Live" : wakaStatus === "loading" ? "Syncing" : "No Data"}
                     </div>
                   </div>
 
+                  {wakaStatus !== "ready" ? (
+                    <div className="relative z-10">
+                      <p className="text-2xl md:text-3xl font-bold tracking-tight text-muted-foreground/60 mb-4">
+                        {wakaStatus === "loading" ? "—" : "0 hrs 0 mins"}
+                      </p>
+                      <div
+                        className="flex w-full h-2 rounded-full overflow-hidden mb-6"
+                        style={{ background: 'rgba(var(--surface),0.1)' }}
+                      />
+                      <p className="text-xs text-muted-foreground font-light leading-relaxed">
+                        {wakaStatus === "loading"
+                          ? "Fetching coding activity…"
+                          : "No coding activity tracked in the last 7 days."}
+                      </p>
+                    </div>
+                  ) : (
                   <div className="relative z-10">
                     <p className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-6 group-hover:text-purple-300 transition-colors">
                       {wakaTotalTime}
@@ -365,6 +396,7 @@ const About = () => {
                       ))}
                     </div>
                   </div>
+                  )}
                 </div>
               </Reveal>
             </div>
