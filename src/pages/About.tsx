@@ -169,9 +169,19 @@ const About = () => {
           }
         } else {
           const res = await fetch("/.netlify/functions/now-playing");
-          if (res.ok) {
-            data = (await res.json()) as SpotifyWidgetPayload;
+          if (res.status === 204) return;
+
+          const json = (await res.json().catch(() => undefined)) as
+            | SpotifyWidgetPayload
+            | { error: true; stage: string; detail: unknown }
+            | undefined;
+
+          if (!res.ok || !json || "error" in json) {
+            console.warn("[spotify] now-playing failed", res.status, json);
+            return;
           }
+
+          data = json;
         }
 
         if (data && data.title) {
