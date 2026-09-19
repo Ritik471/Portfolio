@@ -4,11 +4,15 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 import Reveal from "../components/Reveal";
-import usePageTitle from "../hooks/usePageTitle";
+import usePageMeta from "../hooks/usePageMeta";
 import { contactInfo, socials } from "../data/contact";
 
 const Contact = () => {
-  usePageTitle("Initiate Connection");
+  usePageMeta({
+    title: "Initiate Connection",
+    description:
+      "Get in touch with Ritik Shah about frontend engineering work, collaborations or freelance projects.",
+  });
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [formData, setFormData] = useState({

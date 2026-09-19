@@ -3,11 +3,15 @@ import { X, ExternalLink, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
-import usePageTitle from "../hooks/usePageTitle";
+import usePageMeta from "../hooks/usePageMeta";
 import { certificates } from "../data/certificates";
 
 const Certificates = () => {
-  usePageTitle("Certified Excellence");
+  usePageMeta({
+    title: "Certified Excellence",
+    description:
+      "Certifications and credentials earned by Ritik Shah across frontend engineering, web development and allied technologies.",
+  });
   const [selected, setSelected] = useState<number | null>(null);
 
   return (

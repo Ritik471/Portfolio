@@ -5,6 +5,7 @@ export interface Project {
   tech: string[];
   live: string;
   source: string;
+  image?: string;
   featured: boolean;
   color: string;
   accent: string;
@@ -22,6 +23,7 @@ export const projects: Project[] = [
       "logos:react",
     ],
     tech: ["Next.js", "Tailwind CSS", "WhatsApp API", "Cloud Kitchen"],
+    image: "/assets/images/projects/krishna-foods.webp",
     live: "https://krishna-foods.netlify.app/",
     source: "https://github.com/Ritik471",
     featured: true,
@@ -34,6 +36,7 @@ export const projects: Project[] = [
       "An immersive software engineer dashboard with high-performance design. Features a custom theme system, interactive cursor effects, and responsive glassmorphic UI.",
     tags: ["logos:nextjs-icon", "logos:framer-motion", "logos:tailwindcss-icon"],
     tech: ["Next.js", "Framer Motion", "Tailwind CSS"],
+    image: "/assets/images/projects/portfolio.webp",
     live: "https://ritikshah-portfolio.netlify.app/",
     source: "https://github.com/Ritik471/starfall-port",
     featured: true,

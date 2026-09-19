@@ -24,7 +24,6 @@ export const handler = async (event, context) => {
     return respond(405, { error: "Method Not Allowed" });
   }
 
-  // Open endpoint that sends mail on demand, so throttle per client.
   const limit = rateLimit(clientIp(event));
   if (!limit.allowed) {
     return respond(
@@ -53,8 +52,6 @@ export const handler = async (event, context) => {
 
   const { name, email, subject, message } = result.value;
 
-  // Every interpolation below is escaped: raw values would let a sender inject
-  // working markup into the email that lands in the inbox.
   const safe = {
     name: escapeHtml(name),
     email: escapeHtml(email),

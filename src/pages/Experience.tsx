@@ -8,11 +8,15 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Reveal from "../components/Reveal";
-import usePageTitle from "../hooks/usePageTitle";
+import usePageMeta from "../hooks/usePageMeta";
 import { workExperience, education, type TimelineEntry } from "../data/experience";
 
 const Experience = () => {
-  usePageTitle("Pathway & Growth");
+  usePageMeta({
+    title: "Pathway & Growth",
+    description:
+      "The professional pathway of Ritik Shah - engineering roles, responsibilities and the work delivered at each step.",
+  });
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-indigo-500 pb-40 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">

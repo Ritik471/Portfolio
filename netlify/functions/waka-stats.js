@@ -1,12 +1,9 @@
 const JSON_HEADERS = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    // Cache briefly at the edge: WakaTime data moves slowly and this keeps the
-    // API key's rate limit comfortable if the page is popular.
     "Cache-Control": "public, max-age=300",
 };
 
-// The summaries endpoint returns no colours, unlike the legacy share JSON.
 const LANG_COLORS = {
     TypeScript: "#3178C6",
     JavaScript: "#F1E05A",
@@ -54,8 +51,6 @@ const humanize = (totalSeconds) => {
     return `${hours} hrs ${mins} mins`;
 };
 
-// WakaTime interprets start/end in the account's own timezone, so building the
-// window from UTC drops "today" for anyone ahead of UTC.
 const isoDateIn = (date, timeZone) =>
     new Intl.DateTimeFormat("en-CA", {
         timeZone,
@@ -64,7 +59,6 @@ const isoDateIn = (date, timeZone) =>
         day: "2-digit",
     }).format(date);
 
-// Sum a per-day summaries field (languages / editors / projects) by name.
 const aggregate = (days, key) => {
     const totals = new Map();
     for (const day of days) {
@@ -89,7 +83,6 @@ export const handler = async (event, context) => {
     const authHeader = { Authorization: `Basic ${auth}` };
 
     try {
-        // The account timezone decides which calendar day "today" is.
         const meRes = await fetch("https://wakatime.com/api/v1/users/current", {
             headers: authHeader,
         });
@@ -101,8 +94,6 @@ export const handler = async (event, context) => {
 
         const timeZone = meJson.data?.timezone || "UTC";
 
-        // Last 7 days inclusive of today. The stats/last_7_days endpoint excludes
-        // today, which hides the most recent (and most interesting) activity.
         const now = new Date();
         const startDate = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
         const start = isoDateIn(startDate, timeZone);

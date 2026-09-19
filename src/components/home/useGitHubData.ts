@@ -57,9 +57,6 @@ export const useGitHubData = () => {
   useEffect(() => {
     let cancelled = false;
 
-    // Aggregated server-side: the browser used to paginate api.github.com
-    // directly, which burns the caller's 60 requests/hour and can fail
-    // outright on a shared IP.
     const fetchGitHub = async () => {
       try {
         const res = await fetch("/.netlify/functions/github-stats");
@@ -82,8 +79,6 @@ export const useGitHubData = () => {
             color: githubLangColors[lang.name] || "bg-gray-400",
           })),
         });
-        // Scraped from the profile page, so it can legitimately come back
-        // empty; keep the last known-good list rather than blanking the row.
         if (json.achievements?.length) {
           setAchievements(
             json.achievements.map((a) => ({

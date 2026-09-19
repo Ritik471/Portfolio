@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./hooks/useTheme";
 import Layout from "./components/Layout";
+import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -31,15 +32,17 @@ const App = () => {
           <ScrollToTop />
           <Layout>
             <Suspense fallback={<RouteFallback />}>
-              <Routes>
+              <ErrorBoundary label="route">
+                <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/experience" element={<Experience />} />
                 <Route path="/certificates" element={<Certificates />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </ErrorBoundary>
             </Suspense>
           </Layout>
         </BrowserRouter>

@@ -3,8 +3,6 @@ import { parseAchievements } from "../lib/achievements.js";
 const JSON_HEADERS = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    // GitHub's unauthenticated limit is 60/hour per IP. Caching at the edge
-    // means visitor traffic does not translate into API calls one-for-one.
     "Cache-Control": "public, max-age=600",
 };
 
@@ -20,8 +18,6 @@ const fail = (statusCode, stage, detail) => ({
 });
 
 export const handler = async (event, context) => {
-    // Optional: lifts the rate limit from 60/hour to 5000/hour. The function
-    // works without it, which is why this is not a hard requirement.
     const { GITHUB_TOKEN } = process.env;
 
     const headers = {
@@ -70,7 +66,6 @@ export const handler = async (event, context) => {
         }
         const totalLangs = [...counts.values()].reduce((a, b) => a + b, 0);
 
-        // Colours stay on the client: they are Tailwind classes, not data.
         const languages =
             totalLangs > 0
                 ? [...counts.entries()]
@@ -82,9 +77,6 @@ export const handler = async (event, context) => {
                       .slice(0, TOP_LANGUAGES)
                 : [];
 
-        // Best-effort: achievements exist only in the profile HTML, so this is
-        // scraping. An empty result means the caller should fall back rather
-        // than render nothing.
         let achievements = [];
         try {
             const profileRes = await fetch(`https://github.com/${GITHUB_USERNAME}`, {
@@ -94,10 +86,8 @@ export const handler = async (event, context) => {
                 achievements = parseAchievements(await profileRes.text());
             }
         } catch {
-            // fall through with no achievements
         }
 
-        // Best-effort: a contributions outage should not blank the whole card.
         let contributions = [];
         let totalContributions = 0;
         try {
@@ -113,7 +103,6 @@ export const handler = async (event, context) => {
                 );
             }
         } catch {
-            // fall through with empty contributions
         }
 
         return {

@@ -171,7 +171,6 @@ export interface Achievement {
   image?: string | null;
 }
 
-/** Presentation for each achievement, keyed by GitHub's own slug. */
 export const achievementStyles: Record<
   string,
   Pick<Achievement, "desc" | "icon" | "color" | "border" | "bg">
@@ -228,10 +227,6 @@ export const achievementFallbackStyle = {
   bg: "bg-slate-300/5",
 };
 
-/**
- * Shown only if the live lookup fails. Kept in sync with the real profile so a
- * fallback never shows something untrue.
- */
 export const fallbackAchievements: Achievement[] = [
   { slug: "pull-shark", name: "Pull Shark", tier: "gold", ...achievementStyles["pull-shark"] },
   { slug: "quickdraw", name: "Quickdraw", tier: null, ...achievementStyles.quickdraw },
@@ -243,7 +238,6 @@ export const fallbackAchievements: Achievement[] = [
     ...achievementStyles["pair-extraordinaire"],
   },
 ];
-
 export const githubLangColors: Record<string, string> = {
   TypeScript: "bg-blue-400",
   JavaScript: "bg-yellow-400",

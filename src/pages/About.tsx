@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
-import usePageTitle from "../hooks/usePageTitle";
+import usePageMeta from "../hooks/usePageMeta";
 import { highlights, skills } from "../data/about";
 
 interface WakaLang {
@@ -42,7 +42,11 @@ interface NowPlayingPayload {
 }
 
 const About = () => {
-  usePageTitle("The Engineer & Builder");
+  usePageMeta({
+    title: "The Engineer & Builder",
+    description:
+      "About Ritik Shah: frontend engineering with Next.js and React, scalable monorepo architectures, plus live coding activity and listening stats.",
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [progressMs, setProgressMs] = useState(0);
   const [track, setTrack] = useState({
@@ -75,8 +79,6 @@ const About = () => {
           return;
         }
 
-        // Nothing tracked in the window: show an explicit empty state rather
-        // than inventing numbers.
         if (!json.hasData || json.languages.length === 0) {
           setWakaStatus("empty");
           return;

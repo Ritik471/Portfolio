@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Calendar, Coffee, MapPin } from "lucide-react";
+import { projects } from "./projects";
 
 export interface Highlight {
   icon: LucideIcon;
@@ -27,7 +28,7 @@ export const highlights: Highlight[] = [
   {
     icon: Coffee,
     label: "Projects",
-    value: "10+ Live",
+    value: `${projects.length} Live`,
     color: "text-emerald-400",
     bg: "group-hover:bg-emerald-500/10",
   },

@@ -2,11 +2,34 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { ExternalLink, Github, Globe, Code2 } from "lucide-react";
 import Reveal from "../components/Reveal";
-import usePageTitle from "../hooks/usePageTitle";
+import usePageMeta from "../hooks/usePageMeta";
 import { projects } from "../data/projects";
 
 const Projects = () => {
-  usePageTitle("Selected Engineering Works");
+  usePageMeta({
+    title: "Selected Engineering Works",
+    description:
+      "Selected projects by Ritik Shah, including a cloud-kitchen commerce platform and this portfolio - built with Next.js, React, Tailwind CSS and Flutter.",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Selected Engineering Works",
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "CreativeWork",
+          name: project.title,
+          description: project.description,
+          url: project.live,
+          author: {
+            "@id": "https://ritikshah-portfolio.netlify.app/#person",
+          },
+          keywords: project.tech.join(", "),
+        },
+      })),
+    },
+  });
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-cyan-500 pb-20 md:pb-28 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -65,16 +88,29 @@ const Projects = () => {
                       className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-tr ${project.color} to-transparent z-10`}
                     />
 
-                    <div className="absolute inset-0 flex items-center justify-center pt-8 pointer-events-none">
-                      <Icon
-                        icon={project.tags[0]}
-                        className={`absolute text-7xl md:text-9xl opacity-0 group-hover:opacity-20 blur-3xl transition-all duration-1000 ${project.accent}`}
-                      />
-                      <Icon
-                        icon={project.tags[0]}
-                        className={`relative text-6xl md:text-8xl opacity-20 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700 ${project.accent}`}
-                      />
-                    </div>
+                    {project.image ? (
+                      <div className="absolute inset-0 pt-8 overflow-hidden">
+                        <img
+                          src={project.image}
+                          alt={`${project.title} homepage`}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center pt-8 pointer-events-none">
+                        <Icon
+                          icon={project.tags[0]}
+                          className={`absolute text-7xl md:text-9xl opacity-0 group-hover:opacity-20 blur-3xl transition-all duration-1000 ${project.accent}`}
+                        />
+                        <Icon
+                          icon={project.tags[0]}
+                          className={`relative text-6xl md:text-8xl opacity-20 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700 ${project.accent}`}
+                        />
+                      </div>
+                    )}
                   </motion.div>
 
                   <div className="space-y-4 md:space-y-6">

@@ -8,7 +8,6 @@ const day = (seconds, languages = [], editors = []) => ({
   projects: [],
 });
 
-/** Mock the two calls the handler makes: /users/current then /summaries. */
 const mockWaka = (summaries, { timezone = "Asia/Kolkata" } = {}) => {
   global.fetch = vi.fn(async (url) => {
     const href = String(url);

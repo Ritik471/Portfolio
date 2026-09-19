@@ -4,7 +4,6 @@ const JSON_HEADERS = {
     "Cache-Control": "no-store",
 };
 
-// Last.fm serves this placeholder when a track has no real cover art.
 const LASTFM_PLACEHOLDER = "2a96cbd8b46e442fc41c2b86b821562f";
 const FALLBACK_ART = "/placeholder.svg";
 
@@ -43,7 +42,6 @@ export const handler = async (event, context) => {
         const res = await fetch(url, { headers: { "User-Agent": "ritikshah-portfolio" } });
         const json = await res.json().catch(() => ({}));
 
-        // Last.fm signals API errors in the body, often still with HTTP 200.
         if (!res.ok || json.error) {
             return fail(502, "lastfm", {
                 status: res.status,
@@ -52,9 +50,6 @@ export const handler = async (event, context) => {
             });
         }
 
-        // Last.fm returns `track` as an object (not an array) when a single
-        // result comes back, and prepends the now-playing track to the list
-        // on top of the requested limit.
         const raw = json.recenttracks?.track;
         const track = Array.isArray(raw) ? raw[0] : raw;
 
@@ -72,8 +67,6 @@ export const handler = async (event, context) => {
                 album: track.album?.["#text"] ?? "",
                 albumArt: pickArt(track.image),
                 link: track.url,
-                // Last.fm exposes neither track length nor playback position,
-                // so the UI hides the progress bar when durationMs is 0.
                 durationMs: 0,
                 progressMs: 0,
             }),

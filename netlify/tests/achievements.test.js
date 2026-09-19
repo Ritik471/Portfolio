@@ -7,7 +7,6 @@ const img = (slug, file, name) =>
   `data-hovercard-url="/users/Ritik471/achievements/${slug}/detail?hovercard=1" ` +
   `width="64" alt="Achievement: ${name}" class="achievement-badge-sidebar" />`;
 
-// Shaped after the real profile markup, including the duplicate render.
 const html = [
   img("pair-extraordinaire", "pair-extraordinaire-default-579438a20e01.png", "Pair Extraordinaire"),
   img("pull-shark", "pull-shark-gold-90985540b385.png", "Pull Shark"),
