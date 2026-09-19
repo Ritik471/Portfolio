@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 import Reveal from "../Reveal";
 import { useTheme } from "../../hooks/useTheme";
 import { useGitHubData } from "./useGitHubData";
-import { achievements } from "../../data/home";
 
 const ActivityCalendar = lazy(() =>
   import("react-activity-calendar").then((m) => ({ default: m.ActivityCalendar })),
@@ -18,6 +17,7 @@ const GitHubSection = () => {
     totalContributions,
     loading,
     contributionsLoading,
+    achievements,
   } = useGitHubData();
 
   const stats = [
@@ -130,10 +130,10 @@ const GitHubSection = () => {
         </Reveal>
 
         <Reveal delay={0.45} className="max-w-[950px] mx-auto w-full mb-12">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {achievements.map((achievement) => (
               <motion.div
-                key={achievement.name}
+                key={achievement.slug}
                 whileHover={{ y: -5, scale: 1.02 }}
                 className={`relative p-6 rounded-[2rem] border backdrop-blur-sm flex flex-col items-center text-center group transition-all duration-300 ${achievement.border} ${achievement.bg}`}
               >
@@ -148,6 +148,11 @@ const GitHubSection = () => {
                 <h3 className="font-bold text-foreground mb-1 uppercase tracking-tight text-sm">
                   {achievement.name}
                 </h3>
+                {achievement.tier && (
+                  <span className="mb-1 px-2 py-0.5 rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-300 font-mono text-[9px] uppercase tracking-widest">
+                    {achievement.tier}
+                  </span>
+                )}
                 <p className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
                   {achievement.desc}
                 </p>

@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { githubLangColors } from "../../data/home";
+import {
+  githubLangColors,
+  achievementStyles,
+  achievementFallbackStyle,
+  fallbackAchievements,
+  type Achievement,
+} from "../../data/home";
 
 export interface GitHubLanguage {
   name: string;
@@ -29,6 +35,7 @@ interface GitHubStatsResponse {
     forks: string;
     languages: { name: string; pct: number }[];
   };
+  achievements: { slug: string; name: string; tier: string | null }[];
   contributions: ContributionDay[];
   totalContributions: number;
 }
@@ -43,6 +50,7 @@ export const useGitHubData = () => {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [totalContributions, setTotalContributions] = useState<number>(0);
+  const [achievements, setAchievements] = useState<Achievement[]>(fallbackAchievements);
   const [loading, setLoading] = useState(true);
   const [contributionsLoading, setContributionsLoading] = useState(true);
 
@@ -74,6 +82,19 @@ export const useGitHubData = () => {
             color: githubLangColors[lang.name] || "bg-gray-400",
           })),
         });
+        // Scraped from the profile page, so it can legitimately come back
+        // empty; keep the last known-good list rather than blanking the row.
+        if (json.achievements?.length) {
+          setAchievements(
+            json.achievements.map((a) => ({
+              slug: a.slug,
+              name: a.name,
+              tier: a.tier,
+              ...(achievementStyles[a.slug] ?? achievementFallbackStyle),
+            })),
+          );
+        }
+
         setContributions(json.contributions ?? []);
         setTotalContributions(json.totalContributions ?? 0);
       } catch (error) {
@@ -95,6 +116,7 @@ export const useGitHubData = () => {
 
   return {
     githubStats,
+    achievements,
     contributions,
     totalContributions,
     loading,

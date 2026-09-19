@@ -1,3 +1,5 @@
+import { parseAchievements } from "../lib/achievements.js";
+
 const JSON_HEADERS = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -80,6 +82,21 @@ export const handler = async (event, context) => {
                       .slice(0, TOP_LANGUAGES)
                 : [];
 
+        // Best-effort: achievements exist only in the profile HTML, so this is
+        // scraping. An empty result means the caller should fall back rather
+        // than render nothing.
+        let achievements = [];
+        try {
+            const profileRes = await fetch(`https://github.com/${GITHUB_USERNAME}`, {
+                headers: { "User-Agent": "ritikshah-portfolio" },
+            });
+            if (profileRes.ok) {
+                achievements = parseAchievements(await profileRes.text());
+            }
+        } catch {
+            // fall through with no achievements
+        }
+
         // Best-effort: a contributions outage should not blank the whole card.
         let contributions = [];
         let totalContributions = 0;
@@ -110,6 +127,7 @@ export const handler = async (event, context) => {
                     forks: String(forks),
                     languages,
                 },
+                achievements,
                 contributions,
                 totalContributions,
             }),

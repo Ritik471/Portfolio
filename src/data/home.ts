@@ -160,38 +160,86 @@ export const techStack: TechItem[] = [
 ];
 
 export interface Achievement {
+  slug: string;
   name: string;
   desc: string;
   icon: string;
   color: string;
   border: string;
   bg: string;
+  tier?: string | null;
 }
 
-export const achievements: Achievement[] = [
-  {
-    name: "Pull Shark",
+/** Presentation for each achievement, keyed by GitHub's own slug. */
+export const achievementStyles: Record<
+  string,
+  Pick<Achievement, "desc" | "icon" | "color" | "border" | "bg">
+> = {
+  "pull-shark": {
     desc: "Merged multiple Pull Requests",
     icon: "mdi:shark",
     color: "text-blue-400",
     border: "border-blue-400/20",
     bg: "bg-blue-400/5",
   },
-  {
-    name: "Quickdraw",
+  quickdraw: {
     desc: "Closed PRs within 5 minutes",
     icon: "ph:timer-duotone",
     color: "text-purple-400",
     border: "border-purple-400/20",
     bg: "bg-purple-400/5",
   },
-  {
-    name: "YOLO",
+  yolo: {
     desc: "Merged without review",
     icon: "ph:lightning-duotone",
     color: "text-orange-400",
     border: "border-orange-400/20",
     bg: "bg-orange-400/5",
+  },
+  "pair-extraordinaire": {
+    desc: "Co-authored merged commits",
+    icon: "ph:users-three-duotone",
+    color: "text-emerald-400",
+    border: "border-emerald-400/20",
+    bg: "bg-emerald-400/5",
+  },
+  starstruck: {
+    desc: "Created a repository with many stars",
+    icon: "ph:star-duotone",
+    color: "text-yellow-400",
+    border: "border-yellow-400/20",
+    bg: "bg-yellow-400/5",
+  },
+  "galaxy-brain": {
+    desc: "Answered discussions",
+    icon: "ph:brain-duotone",
+    color: "text-pink-400",
+    border: "border-pink-400/20",
+    bg: "bg-pink-400/5",
+  },
+};
+
+export const achievementFallbackStyle = {
+  desc: "GitHub achievement",
+  icon: "ph:trophy-duotone",
+  color: "text-slate-300",
+  border: "border-slate-300/20",
+  bg: "bg-slate-300/5",
+};
+
+/**
+ * Shown only if the live lookup fails. Kept in sync with the real profile so a
+ * fallback never shows something untrue.
+ */
+export const fallbackAchievements: Achievement[] = [
+  { slug: "pull-shark", name: "Pull Shark", tier: "gold", ...achievementStyles["pull-shark"] },
+  { slug: "quickdraw", name: "Quickdraw", tier: null, ...achievementStyles.quickdraw },
+  { slug: "yolo", name: "YOLO", tier: null, ...achievementStyles.yolo },
+  {
+    slug: "pair-extraordinaire",
+    name: "Pair Extraordinaire",
+    tier: null,
+    ...achievementStyles["pair-extraordinaire"],
   },
 ];
 
