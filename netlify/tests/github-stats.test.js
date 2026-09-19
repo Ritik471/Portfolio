@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { handler } from "./github-stats.js";
+import { handler } from "../functions/github-stats.js";
 
 const ok = (json, headers = {}) => ({
   ok: true,

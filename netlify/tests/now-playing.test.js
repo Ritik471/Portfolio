@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { handler } from "./now-playing.js";
+import { handler } from "../functions/now-playing.js";
 
 const track = (overrides = {}) => ({
   artist: { "#text": "Tame Impala" },

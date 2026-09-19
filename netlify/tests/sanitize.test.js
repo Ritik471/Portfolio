@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { escapeHtml, singleLine, validateContact, LIMITS } from "./sanitize.js";
+import { escapeHtml, singleLine, validateContact, LIMITS } from "../lib/sanitize.js";
 
 describe("escapeHtml", () => {
   it("neutralises markup a sender could inject into the email", () => {

@@ -9,7 +9,7 @@ vi.mock("resend", () => ({
   },
 }));
 
-const { handler } = await import("./send-email.js");
+const { handler } = await import("../functions/send-email.js");
 
 const post = (body, ip = `1.2.3.${Math.floor(Math.random() * 1e6)}`) => ({
   httpMethod: "POST",

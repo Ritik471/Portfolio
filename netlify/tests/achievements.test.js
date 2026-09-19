@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAchievements } from "./achievements.js";
+import { parseAchievements } from "../lib/achievements.js";
 
 // Shaped after the real profile markup.
 const html = `

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { rateLimit } from "./rate-limit.js";
+import { rateLimit } from "../lib/rate-limit.js";
 
 afterEach(() => vi.useRealTimers());
 

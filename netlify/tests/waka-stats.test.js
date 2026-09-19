@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { handler } from "./waka-stats.js";
+import { handler } from "../functions/waka-stats.js";
 
 const day = (seconds, languages = [], editors = []) => ({
   grand_total: { total_seconds: seconds },
