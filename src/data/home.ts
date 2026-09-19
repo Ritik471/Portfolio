@@ -168,6 +168,7 @@ export interface Achievement {
   border: string;
   bg: string;
   tier?: string | null;
+  image?: string | null;
 }
 
 /** Presentation for each achievement, keyed by GitHub's own slug. */

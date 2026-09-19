@@ -138,12 +138,25 @@ const GitHubSection = () => {
                 className={`relative p-6 rounded-[2rem] border backdrop-blur-sm flex flex-col items-center text-center group transition-all duration-300 ${achievement.border} ${achievement.bg}`}
               >
                 <div
-                  className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${achievement.bg}`}
+                  className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+                    achievement.image ? "" : achievement.bg
+                  }`}
                 >
-                  <Icon
-                    icon={achievement.icon}
-                    className={`text-4xl ${achievement.color}`}
-                  />
+                  {achievement.image ? (
+                    <img
+                      src={achievement.image}
+                      alt={`${achievement.name} achievement badge`}
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(255,255,255,0.15)]"
+                    />
+                  ) : (
+                    <Icon
+                      icon={achievement.icon}
+                      className={`text-4xl ${achievement.color}`}
+                    />
+                  )}
                 </div>
                 <h3 className="font-bold text-foreground mb-1 uppercase tracking-tight text-sm">
                   {achievement.name}

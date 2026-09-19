@@ -35,7 +35,7 @@ interface GitHubStatsResponse {
     forks: string;
     languages: { name: string; pct: number }[];
   };
-  achievements: { slug: string; name: string; tier: string | null }[];
+  achievements: { slug: string; name: string; tier: string | null; image: string | null }[];
   contributions: ContributionDay[];
   totalContributions: number;
 }
@@ -90,6 +90,7 @@ export const useGitHubData = () => {
               slug: a.slug,
               name: a.name,
               tier: a.tier,
+              image: a.image,
               ...(achievementStyles[a.slug] ?? achievementFallbackStyle),
             })),
           );

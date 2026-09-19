@@ -5,47 +5,45 @@
  * the caller is expected to fall back rather than render an empty section.
  */
 
-// Slug -> display name. Unknown slugs are title-cased from the slug itself, so
-// a newly introduced achievement still renders with a sensible label.
-const KNOWN_NAMES = {
-    "pull-shark": "Pull Shark",
-    "quickdraw": "Quickdraw",
-    "yolo": "YOLO",
-    "pair-extraordinaire": "Pair Extraordinaire",
-    "starstruck": "Starstruck",
-    "galaxy-brain": "Galaxy Brain",
-    "public-sponsor": "Public Sponsor",
-    "arctic-code-vault-contributor": "Arctic Code Vault Contributor",
-    "heart-on-your-sleeve": "Heart On Your Sleeve",
-    "open-sourcerer": "Open Sourcerer",
-};
-
 const TIERS = ["bronze", "silver", "gold", "platinum", "diamond"];
 
-const titleCase = (slug) =>
-    slug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+const ACHIEVEMENT_IMG = /<img[^>]*data-hovercard-type="achievement"[^>]*>/g;
+const ATTR = (name) => new RegExp(`${name}="([^"]*)"`);
+
+const readTier = (src) => {
+    const file = src.split("/").pop() ?? "";
+    const tier = TIERS.find((t) => file.includes(`-${t}-`) || file.includes(`-${t}.`));
+    return tier ?? null;
+};
 
 /**
  * Extract achievements from a GitHub profile page.
- * Returns [{ slug, name, tier }], tier being a medal name or null.
+ * Returns [{ slug, name, tier, image }], deduplicated by slug.
  */
 export const parseAchievements = (html) => {
     if (typeof html !== "string" || html === "") return [];
 
-    const slugs = new Set();
-    for (const match of html.matchAll(/achievement=([a-z0-9-]+)/g)) {
-        slugs.add(match[1]);
+    const bySlug = new Map();
+
+    for (const [tag] of html.matchAll(ACHIEVEMENT_IMG)) {
+        const src = ATTR("src").exec(tag)?.[1];
+        const hovercard = ATTR("data-hovercard-url").exec(tag)?.[1] ?? "";
+        const alt = ATTR("alt").exec(tag)?.[1] ?? "";
+
+        const slug = /\/achievements\/([a-z0-9-]+)\//.exec(hovercard)?.[1];
+        if (!slug || !src) continue;
+
+        // alt reads "Achievement: Pull Shark" — GitHub's own display name.
+        const name = alt.replace(/^Achievement:\s*/i, "").trim();
+        if (bySlug.has(slug)) continue;
+
+        bySlug.set(slug, {
+            slug,
+            name: name || slug,
+            tier: readTier(src),
+            image: src,
+        });
     }
 
-    return [...slugs].map((slug) => {
-        // Asset filenames carry the tier, e.g. pull-shark-gold-<hash>.png
-        const assetRe = new RegExp(`${slug}-(${TIERS.join("|")}|default)[a-z0-9-]*\.png`);
-        const tier = assetRe.exec(html)?.[1] ?? null;
-
-        return {
-            slug,
-            name: KNOWN_NAMES[slug] ?? titleCase(slug),
-            tier: tier === "default" ? null : tier,
-        };
-    });
+    return [...bySlug.values()];
 };
