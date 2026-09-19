@@ -20,6 +20,8 @@ const GitHubSection = () => {
     achievements,
   } = useGitHubData();
 
+  const calendarData = contributions.filter((c) => c.date.startsWith("2026"));
+
   const stats = [
     {
       label: "Repositories",
@@ -105,14 +107,16 @@ const GitHubSection = () => {
             <p className="font-mono text-sm text-muted-foreground mb-8 uppercase tracking-widest text-center">
               {contributionsLoading
                 ? "Fetching Contributions..."
-                : `${totalContributions} Total Lifetime Contributions`}
+                : calendarData.length > 0
+                  ? `${totalContributions} Total Lifetime Contributions`
+                  : "Contribution data unavailable"}
             </p>
 
             <div className="flex justify-center min-w-fit">
-              {!contributionsLoading && (
+              {!contributionsLoading && calendarData.length > 0 && (
                 <Suspense fallback={null}>
                   <ActivityCalendar
-                    data={contributions.filter((c) => c.date.startsWith("2026"))}
+                    data={calendarData}
                     showWeekdayLabels
                     fontSize={12}
                     blockSize={12}

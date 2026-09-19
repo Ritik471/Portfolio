@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run generate:sitemap && vite build",
-    "build:dev": "npm run generate:sitemap && vite build --mode development",
+    "build": "npm run generate:sitemap && vite build && node scripts/prerender-meta.mjs",
+    "build:dev": "npm run generate:sitemap && vite build --mode development && node scripts/prerender-meta.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

@@ -3,6 +3,8 @@ export interface Certificate {
   issuer: string;
   date: string;
   link: string;
+  credentialId?: string;
+  verified?: boolean;
   image: string;
   description: string;
   icon: string;

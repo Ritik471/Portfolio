@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { SITE_URL, SITE_NAME, DEFAULT_IMAGE, getRouteMeta } from "../data/seo.mjs";
 
-const SITE_URL = "https://ritikshah-portfolio.netlify.app";
-const SITE_NAME = "Ritik Shah";
-const DEFAULT_IMAGE = `${SITE_URL}/assets/images/sidelogo.jpg`;
-
-interface PageMeta {
+interface RouteMeta {
   title: string;
   description: string;
+  image?: string;
+}
+
+interface Options {
+  title?: string;
+  description?: string;
   image?: string;
   structuredData?: Record<string, unknown>;
 }
@@ -34,31 +37,41 @@ const setCanonical = (href: string) => {
 
 const STRUCTURED_DATA_ID = "route-structured-data";
 
-const usePageMeta = ({ title, description, image, structuredData }: PageMeta) => {
+const usePageMeta = (options: Options = {}) => {
   const location = useLocation();
+  const { title, description, image, structuredData } = options;
+
   useEffect(() => {
-    const fullTitle = `${title} | ${SITE_NAME}`;
+    const base = getRouteMeta(location.pathname) as RouteMeta;
+    const resolvedTitle = title ?? base.title;
+    const resolvedDescription = description ?? base.description;
+    const resolvedImage = image ?? base.image ?? DEFAULT_IMAGE;
+
+    const fullTitle = `${resolvedTitle} | ${SITE_NAME}`;
     const url = `${SITE_URL}${location.pathname}`;
-    const socialImage = image
-      ? image.startsWith("http")
-        ? image
-        : `${SITE_URL}${image}`
-      : DEFAULT_IMAGE;
+    const socialImage = resolvedImage.startsWith("http")
+      ? resolvedImage
+      : `${SITE_URL}${resolvedImage}`;
+
     document.title = fullTitle;
+
     setMeta("name", "title", fullTitle);
-    setMeta("name", "description", description);
+    setMeta("name", "description", resolvedDescription);
     setCanonical(url);
+
     setMeta("property", "og:title", fullTitle);
-    setMeta("property", "og:description", description);
+    setMeta("property", "og:description", resolvedDescription);
     setMeta("property", "og:url", url);
     setMeta("property", "og:image", socialImage);
+
     setMeta("name", "twitter:title", fullTitle);
-    setMeta("name", "twitter:description", description);
+    setMeta("name", "twitter:description", resolvedDescription);
     setMeta("name", "twitter:url", url);
     setMeta("name", "twitter:image", socialImage);
   }, [location.pathname, title, description, image]);
 
   const serialized = structuredData ? JSON.stringify(structuredData) : null;
+
   useEffect(() => {
     if (!serialized) return;
 
@@ -69,6 +82,7 @@ const usePageMeta = ({ title, description, image, structuredData }: PageMeta) =>
 
     document.getElementById(STRUCTURED_DATA_ID)?.remove();
     document.head.appendChild(script);
+
     return () => script.remove();
   }, [serialized]);
 };

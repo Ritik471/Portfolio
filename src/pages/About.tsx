@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import Reveal from "../components/Reveal";
 import usePageMeta from "../hooks/usePageMeta";
 import { highlights, skills } from "../data/about";
+import { profile } from "../data/profile";
 
 interface WakaLang {
   name: string;
@@ -42,11 +43,7 @@ interface NowPlayingPayload {
 }
 
 const About = () => {
-  usePageMeta({
-    title: "The Engineer & Builder",
-    description:
-      "About Ritik Shah: frontend engineering with Next.js and React, scalable monorepo architectures, plus live coding activity and listening stats.",
-  });
+  usePageMeta();
   const [isPlaying, setIsPlaying] = useState(false);
   const [progressMs, setProgressMs] = useState(0);
   const [track, setTrack] = useState({
@@ -225,6 +222,27 @@ const About = () => {
 
             <Reveal className="h-full">
               <div className="space-y-6 md:space-y-8 text-lg md:text-xl text-muted-foreground font-light leading-relaxed h-full flex flex-col justify-center">
+                <div className="flex items-center gap-5">
+                  <img
+                    src={profile.portrait}
+                    alt={`${profile.name}, ${profile.role}`}
+                    width={96}
+                    height={96}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border shadow-lg"
+                    style={{ borderColor: "rgba(var(--surface),0.15)" }}
+                  />
+                  <div>
+                    <p className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
+                      {profile.name}
+                    </p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
+                      {profile.role}
+                    </p>
+                  </div>
+                </div>
+
                 <p>
                   I'm <span className="text-foreground font-medium">Ritik Shah</span>,
                   a software engineer with a deep passion for building scalable

@@ -8,11 +8,7 @@ import usePageMeta from "../hooks/usePageMeta";
 import { contactInfo, socials } from "../data/contact";
 
 const Contact = () => {
-  usePageMeta({
-    title: "Initiate Connection",
-    description:
-      "Get in touch with Ritik Shah about frontend engineering work, collaborations or freelance projects.",
-  });
+  usePageMeta();
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [formData, setFormData] = useState({
@@ -189,6 +185,10 @@ const Contact = () => {
                     className={`w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 ${isSent ? "animate-bounce text-emerald-900" : ""} ${isSending ? "animate-pulse" : ""}`}
                   />
                 </motion.button>
+
+                <p className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Typically replies within 24 hours
+                </p>
               </form>
             </Reveal>
           </div>

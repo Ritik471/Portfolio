@@ -64,7 +64,7 @@ export const principles: Principle[] = [
   {
     title: "Scalable Architecture",
     desc: "Implementing modular monorepos and type-safe systems to ensure enterprise platforms remain maintainable.",
-    icon: "line-md:cloud-braces-loop",
+    icon: "line-md:cloud-alt-braces-loop",
     tag: "Architecture",
     glow: "bg-purple-500/10",
   },

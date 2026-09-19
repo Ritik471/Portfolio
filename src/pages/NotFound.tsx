@@ -1,4 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
+import { navItems } from "../data/navigation";
+import { openCommandPalette } from "../lib/commandPalette";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home, ArrowLeft } from "lucide-react";
@@ -66,6 +68,40 @@ const NotFound = () => {
               style={{ borderColor: 'rgba(var(--surface),0.1)' }}
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back
+            </button>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.4}>
+          <div className="mt-16 pt-10 border-t" style={{ borderColor: 'rgba(var(--surface),0.1)' }}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-6">
+              Try one of these
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {navItems
+                .filter((item) => item.path !== "/")
+                .map((item) => {
+                  const ItemIcon = item.icon;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="flex items-center gap-2 px-4 py-2 rounded-full border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                      style={{ borderColor: 'rgba(var(--surface),0.12)' }}
+                    >
+                      <ItemIcon className="w-3.5 h-3.5" />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+            </div>
+
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+            >
+              Or search everything
             </button>
           </div>
         </Reveal>

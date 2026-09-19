@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { availability } from "../../data/availability";
 import {
   ArrowRight,
   ChevronDown,
@@ -28,7 +29,7 @@ const HeroSection = () => {
             className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.1em] sm:tracking-[0.2em] whitespace-nowrap"
             style={{ color: "rgba(var(--surface),0.9)" }}
           >
-            Nagpur, IN — Systems Online
+            Nagpur, IN — {availability.label}
           </span>
         </div>
       </Reveal>
@@ -87,15 +88,14 @@ const HeroSection = () => {
           </Link>
         </motion.div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <a
-            href="https://drive.google.com/uc?export=download&id=179Ei5NVWUCZh7AaqEiTP0d8i8eYyyVxz"
-            rel="noopener noreferrer"
+          <Link
+            to="/resume"
             className="w-64 py-4 border rounded-full hover:border-blue-500/50 transition-all text-foreground/90 backdrop-blur-sm flex items-center justify-center gap-2 group"
             style={{ borderColor: "rgba(var(--surface),0.2)" }}
           >
             <FileText className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
-            Download CV
-          </a>
+            View Resume
+          </Link>
         </motion.div>
       </div>
 

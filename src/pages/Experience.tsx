@@ -12,11 +12,7 @@ import usePageMeta from "../hooks/usePageMeta";
 import { workExperience, education, type TimelineEntry } from "../data/experience";
 
 const Experience = () => {
-  usePageMeta({
-    title: "Pathway & Growth",
-    description:
-      "The professional pathway of Ritik Shah - engineering roles, responsibilities and the work delivered at each step.",
-  });
+  usePageMeta();
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-indigo-500 pb-40 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">

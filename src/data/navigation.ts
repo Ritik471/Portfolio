@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Award, Briefcase, FolderOpen, Home, Mail, User } from "lucide-react";
+import { Award, Briefcase, FileText, FolderOpen, Home, Mail, User } from "lucide-react";
 
 export interface NavItem {
   label: string;
@@ -13,5 +13,6 @@ export const navItems: NavItem[] = [
   { label: "Projects", path: "/projects", icon: FolderOpen },
   { label: "Experience", path: "/experience", icon: Briefcase },
   { label: "Certificates", path: "/certificates", icon: Award },
+  { label: "Resume", path: "/resume", icon: FileText },
   { label: "Contact", path: "/contact", icon: Mail },
 ];

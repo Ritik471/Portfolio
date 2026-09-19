@@ -1,4 +1,5 @@
 import { writeFileSync } from "node:fs";
+import { projects } from "../src/data/projects.ts";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 const SITE = process.env.SITE_URL ?? "https://ritikshah-portfolio.netlify.app";
@@ -9,6 +10,12 @@ const ROUTES = [
   { path: "/experience", changefreq: "monthly", priority: "0.7" },
   { path: "/certificates", changefreq: "monthly", priority: "0.7" },
   { path: "/contact", changefreq: "yearly", priority: "0.6" },
+  { path: "/resume", changefreq: "monthly", priority: "0.8" },
+  ...projects.map((p) => ({
+    path: `/projects/${p.slug}`,
+    changefreq: "monthly",
+    priority: "0.7",
+  })),
 ];
 const lastmod = new Date().toISOString().slice(0, 10);
 const urls = ROUTES.map(

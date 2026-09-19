@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Monitor } from "lucide-react";
+import { Menu, X, Sun, Moon, Monitor, Search } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
 import ThemeToggle from "./ThemeToggle";
 import { navItems } from "../data/navigation";
+import { openCommandPalette } from "../lib/commandPalette";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const Sidebar = () => {
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed left-6 top-64 z-50 hidden lg:flex flex-col items-center gap-4"
+        className="fixed left-6 top-48 z-50 hidden lg:flex flex-col items-center gap-4"
       >
         <Link to="/" className="group relative">
           <div className="w-16 h-16 glass-strong border border-surface-20 rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]">

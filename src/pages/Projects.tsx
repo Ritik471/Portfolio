@@ -1,15 +1,14 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { ExternalLink, Github, Globe, Code2 } from "lucide-react";
 import Reveal from "../components/Reveal";
 import usePageMeta from "../hooks/usePageMeta";
 import { projects } from "../data/projects";
+import useProjectStatus from "../hooks/useProjectStatus";
 
 const Projects = () => {
   usePageMeta({
-    title: "Selected Engineering Works",
-    description:
-      "Selected projects by Ritik Shah, including a cloud-kitchen commerce platform and this portfolio - built with Next.js, React, Tailwind CSS and Flutter.",
     structuredData: {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -30,6 +29,9 @@ const Projects = () => {
       })),
     },
   });
+  const statuses = useProjectStatus();
+  const archived = projects.filter((p) => !p.featured);
+
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-cyan-500 pb-20 md:pb-28 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -120,10 +122,26 @@ const Projects = () => {
                       >
                         Featured Project
                       </div>
+                      {project.statusId && statuses[project.statusId] && (
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              statuses[project.statusId].up
+                                ? "bg-emerald-400 animate-pulse"
+                                : "bg-red-400"
+                            }`}
+                          />
+                          {statuses[project.statusId].up
+                            ? `Live · ${statuses[project.statusId].ms}ms`
+                            : "Offline"}
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground group-hover:translate-x-2 transition-transform duration-500">
-                      {project.title}
-                    </h3>
+                    <Link to={`/projects/${project.slug}`} className="block">
+                      <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground group-hover:translate-x-2 transition-transform duration-500 hover:text-cyan-400">
+                        {project.title}
+                      </h3>
+                    </Link>
                     <p className="text-base md:text-lg text-muted-foreground leading-relaxed font-light group-hover:text-foreground/90 transition-colors">
                       {project.description}
                     </p>
@@ -139,6 +157,13 @@ const Projects = () => {
                     </div>
 
                     <div className="flex flex-wrap gap-8 pt-4">
+                      <Link
+                        to={`/projects/${project.slug}`}
+                        className="flex items-center gap-2 text-xs md:text-sm font-mono text-cyan-400 hover:text-cyan-300 transition-colors group/link"
+                      >
+                        <Code2 className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
+                        Case_Study
+                      </Link>
                       <a
                         href={project.live}
                         target="_blank"
@@ -165,6 +190,7 @@ const Projects = () => {
         </div>
       </section>
 
+      {archived.length > 0 && (
       <section className="relative z-10 py-16 md:py-24 max-w-[1400px] mx-auto border-t" style={{ borderColor: 'rgba(var(--surface),0.1)', background: 'rgba(var(--surface),0.01)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-0">
           <Reveal className="mb-16 text-left">
@@ -177,8 +203,7 @@ const Projects = () => {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects
-              .filter((p) => !p.featured)
+            {archived
               .map((project, i) => (
                 <Reveal key={project.title} delay={i * 0.1}>
                   <motion.div
@@ -241,6 +266,7 @@ const Projects = () => {
           </div>
         </div>
       </section>
+      )}
 
       <footer className="mt-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-[0.5em] relative z-10">
         © 2026 Ritik Shah — Portfolio_v2.sh

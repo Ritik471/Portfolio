@@ -7,11 +7,7 @@ import usePageMeta from "../hooks/usePageMeta";
 import { certificates } from "../data/certificates";
 
 const Certificates = () => {
-  usePageMeta({
-    title: "Certified Excellence",
-    description:
-      "Certifications and credentials earned by Ritik Shah across frontend engineering, web development and allied technologies.",
-  });
+  usePageMeta();
   const [selected, setSelected] = useState<number | null>(null);
 
   return (
@@ -194,14 +190,22 @@ const Certificates = () => {
                       {certificates[selected].date}
                     </p>
                   </div>
-                  <a
-                    href={certificates[selected].link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 bg-white text-black rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl"
-                  >
-                    <ExternalLink className="w-4 h-4" /> Verify_Now
-                  </a>
+                  <div className="w-full sm:w-auto flex flex-col items-center sm:items-end gap-2">
+                    {certificates[selected].credentialId && (
+                      <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+                        ID: {certificates[selected].credentialId}
+                      </p>
+                    )}
+                    <a
+                      href={certificates[selected].link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 bg-white text-black rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      {certificates[selected].verified ? "Verify_Now" : "View_On_LinkedIn"}
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
