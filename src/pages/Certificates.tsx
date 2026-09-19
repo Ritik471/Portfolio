@@ -13,7 +13,7 @@ const Certificates = () => {
   return (
     <div className="relative min-h-screen themed-bg themed-text selection:bg-amber-500 pb-40 overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="absolute inset-0 opacity-[0.04] bg-[url('/noise.svg')]" />
         <div className="absolute -top-[10%] -right-[10%] w-[60%] h-[60%] bg-amber-600/10 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute top-[20%] -left-[10%] w-[50%] h-[50%] bg-orange-600/5 blur-[140px] rounded-full" />
       </div>

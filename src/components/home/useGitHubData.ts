@@ -21,24 +21,23 @@ export interface ContributionDay {
   level: number;
 }
 
-interface GitHubUserJson {
-  public_repos?: number;
-  followers?: number;
-}
-
-interface GitHubRepoJson {
-  stargazers_count: number;
-  forks_count: number;
-  language: string | null;
-}
-
-interface ContributionsApiResponse {
+interface GitHubStatsResponse {
+  stats: {
+    repos: string;
+    stars: string;
+    followers: string;
+    forks: string;
+    languages: { name: string; pct: number }[];
+  };
   contributions: ContributionDay[];
-  total: Record<string, number>;
+  totalContributions: number;
 }
 
-const GITHUB_USERNAME = "ritik471";
-const CONTRIBUTIONS_USERNAME = "Ritik471";
+interface GitHubStatsError {
+  error: true;
+  stage: string;
+  detail: unknown;
+}
 
 export const useGitHubData = () => {
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
@@ -48,89 +47,50 @@ export const useGitHubData = () => {
   const [contributionsLoading, setContributionsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchGitHubStats = async () => {
-      try {
-        const userRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-        const userJson = (await userRes.json()) as GitHubUserJson;
+    let cancelled = false;
 
-        const allRepos: GitHubRepoJson[] = [];
-        let page = 1;
-        while (true) {
-          const reposRes = await fetch(
-            `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&page=${page}`,
-          );
-          const reposJson: unknown = await reposRes.json();
-          if (!Array.isArray(reposJson) || reposJson.length === 0) break;
-          allRepos.push(...(reposJson as GitHubRepoJson[]));
-          if (reposJson.length < 100) break;
-          page++;
+    // Aggregated server-side: the browser used to paginate api.github.com
+    // directly, which burns the caller's 60 requests/hour and can fail
+    // outright on a shared IP.
+    const fetchGitHub = async () => {
+      try {
+        const res = await fetch("/.netlify/functions/github-stats");
+        const json = (await res.json().catch(() => undefined)) as
+          | GitHubStatsResponse
+          | GitHubStatsError
+          | undefined;
+
+        if (cancelled) return;
+
+        if (!res.ok || !json || "error" in json) {
+          console.warn("[github-stats] failed", res.status, json);
+          return;
         }
 
-        const totalStars = allRepos.reduce(
-          (acc, repo) => acc + (repo.stargazers_count ?? 0),
-          0,
-        );
-        const totalForks = allRepos.reduce(
-          (acc, repo) => acc + (repo.forks_count ?? 0),
-          0,
-        );
-
-        const langCounts: Record<string, number> = {};
-        let totalLangs = 0;
-        allRepos.forEach((repo) => {
-          if (repo.language) {
-            langCounts[repo.language] = (langCounts[repo.language] || 0) + 1;
-            totalLangs++;
-          }
-        });
-
-        const sortedLangs =
-          totalLangs > 0
-            ? Object.entries(langCounts)
-                .map(([name, count]) => ({
-                  name,
-                  pct: Math.round((count / totalLangs) * 100),
-                  color: githubLangColors[name] || "bg-gray-400",
-                }))
-                .sort((a, b) => b.pct - a.pct)
-                .slice(0, 5)
-            : [];
-
         setGithubStats({
-          repos: userJson.public_repos?.toString() || "0",
-          stars: totalStars.toString() || "0",
-          followers: userJson.followers?.toString() || "0",
-          forks: totalForks.toString() || "0",
-          languages: sortedLangs,
+          ...json.stats,
+          languages: json.stats.languages.map((lang) => ({
+            ...lang,
+            color: githubLangColors[lang.name] || "bg-gray-400",
+          })),
         });
+        setContributions(json.contributions ?? []);
+        setTotalContributions(json.totalContributions ?? 0);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setContributionsLoading(false);
+        }
       }
     };
 
-    const fetchContributions = async () => {
-      try {
-        const res = await fetch(
-          `https://github-contributions-api.jogruber.de/v4/${CONTRIBUTIONS_USERNAME}`,
-        );
-        const data = (await res.json()) as ContributionsApiResponse;
-        setContributions(data.contributions ?? []);
-        const total = Object.values(data.total ?? {}).reduce(
-          (a, b) => a + b,
-          0,
-        );
-        setTotalContributions(total);
-      } catch (error) {
-        console.error("Error fetching contributions:", error);
-      } finally {
-        setContributionsLoading(false);
-      }
-    };
+    fetchGitHub();
 
-    fetchGitHubStats();
-    fetchContributions();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return {

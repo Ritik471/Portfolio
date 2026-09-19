@@ -39,7 +39,7 @@ const BackgroundLayer = () => {
         }}
       />
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="absolute inset-0 opacity-[0.04] bg-[url('/noise.svg')]" />
         <motion.div
           style={{ y: yBg1 }}
           className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-blue-600/10 blur-[140px] rounded-full animate-pulse"

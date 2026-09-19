@@ -14,7 +14,7 @@ const NotFound = () => {
   return (
     <div className="relative min-h-screen themed-bg themed-text flex items-center justify-center p-6 overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="absolute inset-0 opacity-[0.04] bg-[url('/noise.svg')]" />
         <div className="absolute top-[-10%] -left-[10%] w-[70%] h-[70%] bg-red-600/10 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] -right-[10%] w-[60%] h-[60%] bg-orange-600/5 blur-[140px] rounded-full" />
       </div>
