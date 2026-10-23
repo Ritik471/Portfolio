@@ -27,6 +27,8 @@ export interface Project {
   live: string;
   source: string;
   image?: string;
+  /** Smaller copy of `image` for the home page cards; the detail page uses the full image. */
+  thumbnail?: string;
   statusId?: string;
   caseStudy?: CaseStudy;
   featured: boolean;
@@ -85,6 +87,7 @@ export const projects: Project[] = [
 
 
     image: "/assets/images/projects/krishna-foods.webp",
+    thumbnail: "/assets/images/projects/krishna-foods-card.webp",
     live: "https://krishna-foods.netlify.app/",
     source: "https://github.com/Ritik471",
     featured: true,
@@ -150,6 +153,7 @@ export const projects: Project[] = [
     },
 
     image: "/assets/images/projects/portfolio.webp",
+    thumbnail: "/assets/images/projects/portfolio-card.webp",
     live: "https://ritikshah-portfolio.netlify.app/",
     source: "https://github.com/Ritik471/starfall-port",
     featured: true,

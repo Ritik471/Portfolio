@@ -265,3 +265,19 @@
     scrollbar-width: none;
   }
 }
+/* Theme switch: circular wipe. The clip-path is animated from ThemeToggle.tsx;
+   it starts fully hidden so the new theme never flashes before the wipe begins. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  clip-path: circle(0px at 50% 50%);
+}

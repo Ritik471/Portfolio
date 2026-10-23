@@ -32,7 +32,7 @@ const ServicesSection = () => {
                   className="group relative h-full rounded-[2rem] cursor-pointer"
                 >
                   <div
-                    className={`relative h-full p-8 rounded-[2rem] backdrop-blur-xl border overflow-hidden transition-all duration-500 ${service.hoverBorder}`}
+                    className={`relative h-full p-8 rounded-[2rem] border overflow-hidden transition-all duration-500 ${service.hoverBorder}`}
                     style={{
                       background: "rgba(var(--surface),0.03)",
                       borderColor: "rgba(var(--surface),0.1)",

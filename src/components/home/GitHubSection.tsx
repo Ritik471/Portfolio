@@ -73,7 +73,7 @@ const GitHubSection = () => {
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="p-8 border cursor-pointer rounded-[2rem] text-center group transition-all backdrop-blur-sm"
+                className="p-8 border cursor-pointer rounded-[2rem] text-center group transition-all"
                 style={{
                   borderColor: "rgba(var(--surface),0.1)",
                   background: "rgba(var(--surface),0.03)",
@@ -98,7 +98,7 @@ const GitHubSection = () => {
 
         <Reveal delay={0.4} className="max-w-[950px] mx-auto w-full mb-12">
           <div
-            className="rounded-[2.5rem] p-6 md:p-10 border backdrop-blur-md overflow-x-auto scrollbar-hide text-sm"
+            className="rounded-[2.5rem] p-6 md:p-10 border overflow-x-auto scrollbar-hide text-sm"
             style={{
               borderColor: "rgba(var(--surface),0.1)",
               background: "rgba(var(--surface),0.03)",
@@ -139,7 +139,7 @@ const GitHubSection = () => {
               <motion.div
                 key={achievement.slug}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className={`relative p-6 rounded-[2rem] border backdrop-blur-sm flex flex-col items-center text-center group transition-all duration-300 ${achievement.border} ${achievement.bg}`}
+                className={`relative p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all duration-300 ${achievement.border} ${achievement.bg}`}
               >
                 <div
                   className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${
@@ -180,7 +180,7 @@ const GitHubSection = () => {
 
         <Reveal delay={0.5} className="max-w-[950px] mx-auto w-full">
           <div
-            className="rounded-[2.5rem] p-10 border cursor-pointer backdrop-blur-md"
+            className="rounded-[2.5rem] p-10 border cursor-pointer"
             style={{
               borderColor: "rgba(var(--surface),0.1)",
               background: "rgba(var(--surface),0.03)",

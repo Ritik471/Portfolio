@@ -31,7 +31,7 @@ const TechStackSection = () => {
                 whileHover={{ y: -5, scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 whileTap={{ scale: 0.95 }}
-                className={`p-8 border cursor-pointer backdrop-blur-md rounded-[2rem] flex flex-col items-center gap-4 group transition-all duration-500 ${tech.border} ${tech.color}`}
+                className={`p-8 border cursor-pointer rounded-[2rem] flex flex-col items-center gap-4 group transition-all duration-500 ${tech.border} ${tech.color}`}
                 style={{
                   borderColor: "rgba(var(--surface),0.1)",
                   background: "rgba(var(--surface),0.02)",

@@ -117,7 +117,7 @@ export const techStack: TechItem[] = [
   },
   {
     name: "Flutter",
-    icon: "logos:flutter",
+    icon: "devicon:flutter", // square mark; logos:flutter is a wide wordmark that overflows the card
     color: "group-hover:shadow-blue-400/40",
     border: "hover:border-blue-400/50",
   },

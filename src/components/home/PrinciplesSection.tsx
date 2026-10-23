@@ -27,7 +27,7 @@ const PrinciplesSection = () => {
               <motion.div
                 whileHover={{ y: -10, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="group relative p-8 md:p-10 border cursor-pointer rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 overflow-hidden h-full backdrop-blur-sm"
+                className="group relative p-8 md:p-10 border cursor-pointer rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 overflow-hidden h-full"
                 style={{
                   borderColor: "rgba(var(--surface),0.1)",
                   background: "rgba(var(--surface),0.03)",

@@ -59,7 +59,7 @@ export const skills: SkillGroup[] = [
   },
   {
     category: "Mobile Solutions",
-    icon: "logos:flutter",
+    icon: "devicon:flutter",
     items: ["Flutter", "React Native", "Dart"],
     accent: "group-hover:border-emerald-500/50",
     glow: "bg-emerald-500/5",

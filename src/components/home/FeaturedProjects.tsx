@@ -48,7 +48,7 @@ const FeaturedProjects = () => {
                 <motion.div whileHover={{ y: -6 }} className="h-full">
                   <Link
                     to={`/projects/${project.slug}`}
-                    className="group flex flex-col h-full rounded-[2rem] border overflow-hidden backdrop-blur-sm transition-colors hover:border-cyan-500/40"
+                    className="group flex flex-col h-full rounded-[2rem] border overflow-hidden transition-colors hover:border-cyan-500/40"
                     style={{
                       borderColor: "rgba(var(--surface),0.1)",
                       background: "rgba(var(--surface),0.03)",
@@ -57,7 +57,7 @@ const FeaturedProjects = () => {
                     <div className="relative aspect-video overflow-hidden">
                       {project.image ? (
                         <img
-                          src={project.image}
+                          src={project.thumbnail ?? project.image}
                           alt={`${project.title} preview`}
                           loading="lazy"
                           decoding="async"

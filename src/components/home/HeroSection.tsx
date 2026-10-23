@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { gsap, useGSAP } from "../../lib/gsap";
 import { availability } from "../../data/availability";
 import {
   ArrowRight,
@@ -11,8 +13,49 @@ import {
 import Reveal from "../Reveal";
 
 const HeroSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Intro: each headline line rises into place.
+        gsap.from(".hero-line", {
+          yPercent: 70,
+          autoAlpha: 0,
+          rotateX: -40,
+          transformOrigin: "50% 100%",
+          duration: 1.1,
+          ease: "power4.out",
+          stagger: 0.18,
+        });
+
+        // Scroll: the headline drifts up and fades as the hero leaves the screen.
+        gsap.to(headingRef.current, {
+          yPercent: -18,
+          autoAlpha: 0.1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef },
+  );
+
   return (
-    <section className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-32 pb-24 text-center">
+    <section
+      ref={sectionRef}
+      className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-32 pb-24 text-center"
+    >
       <Reveal>
         <div
           className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 border rounded-full backdrop-blur-md"
@@ -34,20 +77,19 @@ const HeroSection = () => {
         </div>
       </Reveal>
 
-      <motion.h1
+      <h1
+        ref={headingRef}
         className="text-4xl sm:text-8xl lg:text-9xl font-bold tracking-tighter leading-[1.1] sm:leading-[1.0] mb-6 sm:mb-8 overflow-visible"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        style={{ perspective: 800 }}
       >
-        <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-blue-400/80">
+        <span className="hero-line inline-block text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-blue-400/80">
           ENGINEER
         </span>{" "}
         <br />
-        <span className="inline-block py-2 px-4 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
+        <span className="hero-line inline-block py-2 px-4 text-transparent bg-clip-text bg-gradient-to-b from-foreground to-muted-foreground italic">
           BY DESIGN
         </span>
-      </motion.h1>
+      </h1>
 
       <Reveal delay={0.1}>
         <div className="flex flex-wrap justify-center gap-4 mb-8">
